@@ -50,6 +50,11 @@ int main(void)
   /* Initialize GPIO */
   gpio_init();
 
+  /* Initialise LETIMER0 */
+  LETIMER0_init();
+
+  /* Enable LETIMER0 */
+  LETIMER_Inable(LETIMER0, true);
 
   /* Infinite blink loop */
   while (1) {

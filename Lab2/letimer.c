@@ -1,4 +1,7 @@
+#include "main.h"
+#include "em_letimer.h"
 #include "letimer.h"
+
 /*
  * letimer.c
  *
@@ -6,34 +9,64 @@
  *      Author: Dylan
  */
 
-#define LETIMER_PRESC
+/*
+* Defines                                                                                                 *
+*/
+
+#define LFXO_FREQ       32768u
+#define ULFRCO_FREQ     1000u
+#define LETIMER_PERIOD  1.5    // in seconds
+#define LED_ON_TIME     0.4    // in seconds
+
+/*
+* Function Definitions
+*/
 
 void LETIMER0_init(void){
-	LETIMER_Init_TypeDef* letimer;
-	  letimer -> enable = false;         	  /**< Start counting when initialization completes. */
-	  letimer -> debugRun = false;       	  /**< Counter shall keep running during debug halt. */
-	#if defined(LETIMER_CTRL_RTCC0TEN)
-	  letimer -> rtcComp0Enable = false; 	  /**< Start counting on RTC COMP0 match. */
-	  letimer -> rtcComp1Enable = false; 	  /**< Start counting on RTC COMP1 match. */
-	#endif
-	  letimer -> comp0Top = false;       	  /**< Load COMP0 register into CNT when counter underflows. */
-	  letimer -> bufTop = false;         	  /**< Load COMP1 into COMP0 when REP0 reaches 0. */
-	  letimer -> out0Pol = 0;        		  /**< Idle value for output 0. */
-	  letimer -> out1Pol = 0;        		  /**< Idle value for output 1. */
-	  letimer -> ufoa0 = letimerUFOANone;     /**< Underflow output 0 action. */
-	  letimer -> ufoa1 = letimerUFOANone;     /**< Underflow output 1 action. */
-	  letimer -> repMode = letimerRepeatFree; /**< Repeat mode. */
-	  letimer -> topValue = 0;       		  /**< Top value. Counter wraps when top value matches counter value is reached. */
+	// Set comp0 and comp1
+	uint32_t vcomp0, vcomp1;
+	LETIMER_Init_TypeDef letimer0_init;
 
-	// Set comp0
-	// Set comp1
+	vcomp0 = LFXO_FREQ * LETIMER_PERIOD - 1;
+	vcomp1 = vcomp0 - (LFXO_FREQ * LED_ON_TIME);
+
+	// Initialise LETIMER0
+	letimer0_init.bufTop = false;
+	letimer0_init.comp0Top = true;
+	letimer0_init.debugRun = false;
+	letimer0_init.enable = false;
+	letimer0_init.out0Pol = 0;
+	letimer0_init.out1Pol = 0;
+	letimer0_init.repMode = letimerRepeatFree;
+	letimer0_init.topValue = 0;
+	letimer0_init.ufoa0 = letimerUFOANone;
+	letimer0_init.ufoa1 = letimerUFOANone;
+
+	LETIMER_Init(LETIMER0, &letimer0_init);
+
+	LETIMER_CompareSet(LETIMER0, 0, vcomp0);
+	LETIMER_CompareSet(LETIMER0, 1, vcomp1);
+
+	LETIMER0 -> IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1;
+	LETIMER0 -> IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1;
+
+	NVIC_EnableIRQ(LETIMER0_IRQn);
+
 	CMU_ClockPrescSet(cmuClock_LETIMER0, LETIMER_PRESC);// Set prescalar
-	// Set to free running mode
-	int seconds_ticks = ;
-	int on_ticks = ;
-	LETIMER_CompareSet(letimer, 0, seconds_ticks);
-	LETIMER_CompareSet(letimer, 1, on_ticks);
 	LETIMER_Enable(letimer, 1); // Enable LETIMER0
+}
+
+void LETIMER0_IRQHandler(){
+	uint32_t int_flag;
+	int_flag = LETIMER_IntGet(LETIMER0);
+	LETIMER0 -> IFC = int_flag;
+
+	if (int_flag & LETIMER_IF_COMP0){
+		GPIO_PinOutSet(LED0_port, LED0_pin);
+	}
+	if (int_flag & LETIMER_IF_COMP1){
+		GPIO_PinOut
+	}
 }
 
 void LETIMER_Interrupt_Init(void){
