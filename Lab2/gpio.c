@@ -35,14 +35,3 @@ void gpio_init(void){
 
 }
 
-void LETIMER0_IRQHandler(void){
-	int flag = LETIMER_IntGet(LETIMER0);
-	if ((flag & LETIMER_IFC_UF) != false){
-		GPIO_PinOutClear(LED0_port, LED0_pin);
-	} else if ((flag & LETIMER_IFC_COMP1) != false){
-		GPIO_PinOutSet(LED0_port, LED0_pin);
-	} else {
-		GPIO_PinOutSet(LED1_port, LED1_pin);
-	}
-	LETIMER_IntClear(LETIMER0);
-}

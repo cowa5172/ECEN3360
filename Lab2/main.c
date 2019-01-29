@@ -27,7 +27,6 @@
 #include "gpio.h"
 #include "cmu.h"
 
-
 int main(void)
 {
   EMU_DCDCInit_TypeDef dcdcInit = EMU_DCDCINIT_DEFAULT;
@@ -44,28 +43,20 @@ int main(void)
   CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
   CMU_OscillatorEnable(cmuOsc_HFRCO, false, false);
 
-  /* Initialize clocks */
+  /* Initialise clocks */
   cmu_init();
 
-  /* Initialize GPIO */
+  /* Initialise GPIO */
   gpio_init();
 
   /* Initialise LETIMER0 */
   LETIMER0_init();
 
   /* Enable LETIMER0 */
-  LETIMER_Inable(LETIMER0, true);
+  LETIMER_Enable(LETIMER0, true);
 
   /* Infinite blink loop */
   while (1) {
-		for (int i = 0; i < 1500000; i++);
-		GPIO_PinOutClear(LED0_port, LED0_pin);
-
-		for (int i = 0; i < 1500000; i++);
-		GPIO_PinOutClear(LED1_port, LED1_pin);
-
-		for (int i = 0; i < 2500000; i++);
-		GPIO_PinOutSet(LED0_port, LED0_pin);
-//		GPIO_PinOutSet(LED1_port, LED1_pin);
+	  EnterSleep();
   }
 }

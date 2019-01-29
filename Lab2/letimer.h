@@ -1,12 +1,19 @@
 //***********************************************************************************
 // Include files
 //***********************************************************************************
+#include "main.h"
+#include "em_letimer.h"
 #include "cmu.h"
-#include "em_cmu.h"
 
 //***********************************************************************************
 // defined files
 //***********************************************************************************
+
+#define LFXO_FREQ       32768u
+#define ULFRCO_FREQ     1000u
+#define LFXO_PRESC      1024u
+#define LETIMER_PERIOD  5   // in seconds
+#define LED_ON_TIME     0.4    // in seconds
 
 //***********************************************************************************
 // global variables
@@ -16,28 +23,6 @@
 //***********************************************************************************
 // function prototypes
 //***********************************************************************************
-void cmu_init(void){
+void LETIMER0_init(void);
+void LETIMER0_IRQHandler(void);
 
-		uint32_t	temp_freq;
-
-		CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
-		CMU_ClockEnable(cmuClock_HFPER, true);
-
-		// By default, LFRCO is enabled
-		CMU_OscillatorEnable(cmuOsc_LFRCO, false, false);	// using LFXO or ULFRCO
-
-		// Route LF clock to the LF clock tree
-
-		CMU_OscillatorEnable(cmuOsc_ULFRCO, false, false);
-		CMU_OscillatorEnable(cmuOsc_LFXO, true, true);		// Disable LFXO
-		CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);	// routing clock to LFA
-
-		CMU -> LFAPRESC0 = PRESCALER;
-
-		CMU_ClockEnable(cmuClock_LFA, true);
-		CMU_ClockEnable(cmuClock_CORELE, true);
-
-		// Peripheral clocks enabled
-		CMU_ClockEnable(cmuClock_GPIO, true);
-		CMU_ClockEnable(cmuClock_LETIMER0, true);
-}

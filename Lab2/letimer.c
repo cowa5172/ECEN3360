@@ -1,6 +1,7 @@
 #include "main.h"
-#include "em_letimer.h"
 #include "letimer.h"
+#include "gpio.h"
+#include "cmu.h"
 
 /*
  * letimer.c
@@ -8,15 +9,6 @@
  *  Created on: 22 Jan 2019
  *      Author: Dylan
  */
-
-/*
-* Defines                                                                                                 *
-*/
-
-#define LFXO_FREQ       32768u
-#define ULFRCO_FREQ     1000u
-#define LETIMER_PERIOD  1.5    // in seconds
-#define LED_ON_TIME     0.4    // in seconds
 
 /*
 * Function Definitions
@@ -27,20 +19,20 @@ void LETIMER0_init(void){
 	uint32_t vcomp0, vcomp1;
 	LETIMER_Init_TypeDef letimer0_init;
 
-	vcomp0 = LFXO_FREQ * LETIMER_PERIOD - 1;
-	vcomp1 = vcomp0 - (LFXO_FREQ * LED_ON_TIME);
+	vcomp0 = LFXO_PRESC * LETIMER_PERIOD;
+	vcomp1 = vcomp0 - (LFXO_PRESC * LED_ON_TIME);
 
 	// Initialise LETIMER0
-	letimer0_init.bufTop = false;
+	letimer0_init.bufTop   = false;
 	letimer0_init.comp0Top = true;
 	letimer0_init.debugRun = false;
-	letimer0_init.enable = false;
-	letimer0_init.out0Pol = 0;
-	letimer0_init.out1Pol = 0;
-	letimer0_init.repMode = letimerRepeatFree;
+	letimer0_init.enable   = false;
+	letimer0_init.out0Pol  = 0;
+	letimer0_init.out1Pol  = 0;
+	letimer0_init.repMode  = letimerRepeatFree;
 	letimer0_init.topValue = 0;
-	letimer0_init.ufoa0 = letimerUFOANone;
-	letimer0_init.ufoa1 = letimerUFOANone;
+	letimer0_init.ufoa0    = letimerUFOANone;
+	letimer0_init.ufoa1    = letimerUFOANone;
 
 	LETIMER_Init(LETIMER0, &letimer0_init);
 
@@ -51,9 +43,6 @@ void LETIMER0_init(void){
 	LETIMER0 -> IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1;
 
 	NVIC_EnableIRQ(LETIMER0_IRQn);
-
-	CMU_ClockPrescSet(cmuClock_LETIMER0, LETIMER_PRESC);// Set prescalar
-	LETIMER_Enable(letimer, 1); // Enable LETIMER0
 }
 
 void LETIMER0_IRQHandler(){
@@ -65,16 +54,10 @@ void LETIMER0_IRQHandler(){
 		GPIO_PinOutSet(LED0_port, LED0_pin);
 	}
 	if (int_flag & LETIMER_IF_COMP1){
-		GPIO_PinOut
+		GPIO_PinOutClear(LED0_port, LED0_pin);
 	}
 }
-
-void LETIMER_Interrupt_Init(void){
-	int_flag = LETIMER0
-	LETIMER0 -> IFC = LETIMER_IFC_UF | LETIMER_IFC_COMP1; // Clear LETIMER0 interrupt flags
-	LETIMER0 -> IEN = LETIMER_IEN_UF | LETIMER_IEN_COMP1; // Enable COMP0 and COMP1 interrupts
-}
-
+/*
 void Sleep_Block_Mode(unsigned int EM){
 
 }
@@ -86,3 +69,4 @@ void Sleep_UnBlock_Mode(unsigned int EM){
 void Enter_Sleep(void){
 
 }
+*/
