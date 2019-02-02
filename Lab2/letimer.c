@@ -19,8 +19,15 @@ void LETIMER0_init(void){
 	uint32_t vcomp0, vcomp1;
 	LETIMER_Init_TypeDef letimer0_init;
 
-	vcomp0 = LFXO_PRESC * LETIMER_PERIOD;
-	vcomp1 = vcomp0 - (LFXO_PRESC * LED_ON_TIME);
+	#ifdef LFXO_MODE
+		vcomp0 = LFXO_PRESC * LETIMER_PERIOD;
+		vcomp1 = vcomp0 - (LFXO_PRESC * LED_ON_TIME);
+	#endif
+	#ifdef ULFRCO_MODE
+		vcomp0 = 
+		vcomp1 = 
+	#endif
+
 
 	// Initialise LETIMER0
 	letimer0_init.bufTop   = false;
@@ -57,16 +64,3 @@ void LETIMER0_IRQHandler(){
 		GPIO_PinOutClear(LED0_port, LED0_pin);
 	}
 }
-/*
-void Sleep_Block_Mode(unsigned int EM){
-
-}
-
-void Sleep_UnBlock_Mode(unsigned int EM){
-
-}
-
-void Enter_Sleep(void){
-
-}
-*/
