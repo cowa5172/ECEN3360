@@ -1,20 +1,3 @@
-/***************************************************************************//**
- * @file
- * @brief Simple LED Blink Demo for SLSTK3402A
- *******************************************************************************
- * # License
- * <b>Copyright 2018 Silicon Laboratories Inc. www.silabs.com</b>
- *******************************************************************************
- *
- * The licensor of this software is Silicon Laboratories Inc. Your use of this
- * software is governed by the terms of Silicon Labs Master Software License
- * Agreement (MSLA) available at
- * www.silabs.com/about-us/legal/master-software-license-agreement. This
- * software is distributed to you in Source Code format and is governed by the
- * sections of the MSLA applicable to Source Code.
- *
- ******************************************************************************/
-
 #include "main.h"
 #include "em_device.h"
 #include "em_chip.h"
@@ -23,6 +6,17 @@
 #include "cmu.h"
 #include "letimer.h"
 #include "emu.h"
+
+/******************************************************************************
+ * filename: main.c                              														  *
+ * 						                                    													  *
+ * purpose: initialises all peripherals and modules before entering sleep     *
+ *          in a defined energy mode                                          *
+ * 																			                                      *
+ * date created: 22 Jan 2019												                          *
+ *																			                                      *
+ * authors: Dylan Oh and Mike Fruge											                      *
+ *****************************************************************************/
 
 int main(void)
 {
@@ -52,6 +46,7 @@ int main(void)
   /* Enable LETIMER0 */
   LETIMER_Enable(LETIMER0, true);
 
+  /* Determines minimum sleep mode */
   blockSleepMode(LETIMER0_EM);
 
   /* Infinite blink loop */
