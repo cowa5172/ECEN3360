@@ -12,6 +12,7 @@
 #define	LED0_port		gpioPortF
 #define LED0_pin        4
 #define LED0_default	false 	// off
+
 // LED1 pin is
 #define LED1_port       gpioPortF
 #define LED1_pin        5

@@ -2,7 +2,6 @@
 // Include files
 //***********************************************************************************
 #include "cmu.h"
-#include "em_cmu.h"
 
 //***********************************************************************************
 // defined files
@@ -17,27 +16,22 @@
 // function prototypes
 //***********************************************************************************
 void cmu_init(void){
+	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
+	CMU_ClockEnable(cmuClock_HFPER, true);
 
-		uint32_t	temp_freq;
+	// By default, LFRCO is enabled
+	CMU_OscillatorEnable(cmuOsc_LFRCO, false, false);	// using LFXO or ULFRCO
 
-		CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
-		CMU_ClockEnable(cmuClock_HFPER, true);
+	// Route LF clock to the LF clock tree
 
-		// By default, LFRCO is enabled
-		CMU_OscillatorEnable(cmuOsc_LFRCO, false, false);	// using LFXO or ULFRCO
+	CMU_OscillatorEnable(cmuOsc_ULFRCO, false, false);
+	CMU_OscillatorEnable(cmuOsc_LFXO, true, true);		// Disable LFXO
+	CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);	// routing clock to LFA
 
-		// Route LF clock to the LF clock tree
+	CMU_ClockEnable(cmuClock_LFA, true);
+	CMU_ClockEnable(cmuClock_CORELE, true);
 
-		CMU_OscillatorEnable(cmuOsc_ULFRCO, false, false);
-		CMU_OscillatorEnable(cmuOsc_LFXO, true, true);		// Disable LFXO
-		CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);	// routing clock to LFA
-
-		CMU -> LFAPRESC0 = PRESCALER;
-
-		CMU_ClockEnable(cmuClock_LFA, true);
-		CMU_ClockEnable(cmuClock_CORELE, true);
-
-		// Peripheral clocks enabled
-		CMU_ClockEnable(cmuClock_GPIO, true);
-		CMU_ClockEnable(cmuClock_LETIMER0, true);
+	// Peripheral clocks enabled
+	CMU_ClockEnable(cmuClock_GPIO, true);
+	CMU_ClockEnable(cmuClock_LETIMER0, true);
 }

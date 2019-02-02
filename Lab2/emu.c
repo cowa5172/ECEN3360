@@ -1,4 +1,3 @@
-#include "em_emu.h"
 #include "emu.h"
 
 /*
@@ -8,14 +7,15 @@
  *      Author: Dylan
  */
 
+int sleep_block_counter[MAX_EM_ELEMENTS];
 
-void blockSleepMode(sleepstate_enum minimumMode){
+void blockSleepMode(uint8_t minimumMode){
 	CORE_ATOMIC_IRQ_DISABLE();
 	sleep_block_counter[minimumMode]++;
 	CORE_ATOMIC_IRQ_ENABLE();
 }
 
-void unblockSleepMode(sleepstate_enum minimumMode){
+void unblockSleepMode(uint8_t minimumMode){
 	CORE_ATOMIC_IRQ_DISABLE();
 	if (sleep_block_counter[minimumMode] > 0){
 		sleep_block_counter[minimumMode]--;
@@ -23,16 +23,16 @@ void unblockSleepMode(sleepstate_enum minimumMode){
 	CORE_ATOMIC_IRQ_ENABLE();
 }
 
-void sleep(void){
-	if (sleep_block_counter[0] > 0){
+void enter_sleep(void){
+	if (sleep_block_counter[EM0] > 0){
 		return;
-	} else if (sleep_block_counter[1] > 0){
+	} else if (sleep_block_counter[EM1] > 0){
 		return;
-	} else if (sleep_block_counter[2] > 0){
+	} else if (sleep_block_counter[EM2] > 0){
 		EMU_EnterEM1();
-	} else if (sleep_block_counter[3] > 0){
+	} else if (sleep_block_counter[EM3] > 0){
 		EMU_EnterEM2(true);
 	} else {
-		EMU_EnterEM3();
+		EMU_EnterEM3(true);
 	}
 }

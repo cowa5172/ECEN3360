@@ -1,7 +1,4 @@
-#include "main.h"
 #include "letimer.h"
-#include "gpio.h"
-#include "cmu.h"
 
 /*
  * letimer.c
@@ -10,24 +7,41 @@
  *      Author: Dylan
  */
 
+/******************************************************************************
+ * FUNCTION DEFINITIONS 					 								  *
+ *****************************************************************************/
+
 /*
-* Function Definitions
-*/
+ * function name: LETIMER0_init
+ *
+ * description: Initialises the LETIMER0 by setting the COMP0 and COMP1
+ *  			registers, adjusting the prescaler, enabling repeat free mode,
+ *
+ *
+ */
 
 void LETIMER0_init(void){
 	// Set comp0 and comp1
-	uint32_t vcomp0, vcomp1;
+	uint32_t vcomp0, vcomp1, eff_freq, prescaler;
 	LETIMER_Init_TypeDef letimer0_init;
 
-	#ifdef LFXO_MODE
-		vcomp0 = LFXO_PRESC * LETIMER_PERIOD;
-		vcomp1 = vcomp0 - (LFXO_PRESC * LED_ON_TIME);
-	#endif
-	#ifdef ULFRCO_MODE
-		vcomp0 = 
-		vcomp1 = 
-	#endif
+	vcomp0 = LFXO_FREQ * LETIMER_PERIOD;
+	vcomp1 = vcomp0 - (LFXO_FREQ * LED_ON_TIME);
+	eff_freq = LFXO_FREQ;
+	prescaler = 1;
 
+	// Set prescaler
+	while (vcomp0 / MAX_COUNT){
+		eff_freq = eff_freq >> 1;
+		prescaler = prescaler << 1;
+		vcomp0 = eff_freq * LETIMER_PERIOD;
+	}
+
+	if (prescaler != 1){
+		CMU_ClockPrescSet(cmuClock_LETIMER0, prescaler);
+	}
+
+	vcomp1 = vcomp0 - eff_freq * LED_ON_TIME;
 
 	// Initialise LETIMER0
 	letimer0_init.bufTop   = false;
@@ -51,6 +65,8 @@ void LETIMER0_init(void){
 
 	NVIC_EnableIRQ(LETIMER0_IRQn);
 }
+
+/*****************************************************************************/
 
 void LETIMER0_IRQHandler(){
 	uint32_t int_flag;

@@ -15,17 +15,14 @@
  *
  ******************************************************************************/
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "main.h"
 #include "em_device.h"
 #include "em_chip.h"
-#include "em_cmu.h"
-#include "em_emu.h"
-#include "em_letimer.h"
 #include "bsp.h"
-#include "main.h"
 #include "gpio.h"
 #include "cmu.h"
+#include "letimer.h"
+#include "emu.h"
 
 int main(void)
 {
@@ -55,8 +52,10 @@ int main(void)
   /* Enable LETIMER0 */
   LETIMER_Enable(LETIMER0, true);
 
+  blockSleepMode(LETIMER0_EM);
+
   /* Infinite blink loop */
   while (1) {
-	  EnterSleep();
+	  enter_sleep();
   }
 }
