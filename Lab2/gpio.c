@@ -14,4 +14,3 @@ void gpio_init(void){
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, LED1_default);
 
 }
-
