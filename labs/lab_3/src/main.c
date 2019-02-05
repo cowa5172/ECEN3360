@@ -15,14 +15,12 @@
  *
  ******************************************************************************/
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "main.h"
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_cmu.h"
 #include "em_emu.h"
 #include "bsp.h"
-#include "main.h"
 #include "gpio.h"
 #include "cmu.h"
 #include "letimer.h"

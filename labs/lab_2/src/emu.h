@@ -1,12 +1,11 @@
+#include "em_emu.h"
+#include "em_core.h"
 #include "main.h"
-#include "em_letimer.h"
-#include "cmu.h"
-#include "gpio.h"
 
 /******************************************************************************
- * filename: letimer.h														  *
+ * filename: emu.h															  *
  * 																			  *
- * purpose: contains function declarations and macros used in letimer.c       *
+ * purpose: contains function declarations and macros used in emu.c	          *
  * 																			  *
  * date created: 22 Jan 2019												  *
  *																			  *
@@ -16,13 +15,20 @@
 /******************************************************************************
  * MACRO DEFINITIONS     					 								  *
  *****************************************************************************/
-#define     LFXO_FREQ       32768u
-#define     ULFRCO_FREQ     1000u
-#define     MAX_COUNT       65535
+#define		MAX_EM_ELEMENTS 	5
+
+enum sleepstate_enum {
+	EM0 = 0,
+	EM1 = 1,
+	EM2 = 2,
+	EM3 = 3,
+	EM4 = 4
+};
 
 
 /******************************************************************************
  * FUNCTION DECLARATIONS 					 								  *
  *****************************************************************************/
-void LETIMER0_init(void);
-void LETIMER0_IRQHandler(void);
+void blockSleepMode(uint8_t minimumMode);
+void unblockSleepMode(uint8_t minimumMode);
+void enter_sleep(void);

@@ -1,29 +1,39 @@
-//***********************************************************************************
-// Include files
-//***********************************************************************************
 #include "main.h"
 #include "em_gpio.h"
 
-//***********************************************************************************
-// defined files
-//***********************************************************************************
+/******************************************************************************
+ * filename: gpio.h 														  *
+ * 																			  *
+ * purpose: contains function declarations and macros used in gpio.c          *
+ * 																			  *
+ * date created: 22 Jan 2019												  *
+ *																			  *
+ * authors: Dylan Oh and Mike Fruge											  *
+ *****************************************************************************/
 
-// LED0 pin is PF4
-#define	LED0_port		gpioPortF
-#define LED0_pin		04U
-#define LED0_default	false 	// off
-// LED1 pin is PF5
-#define LED1_port		gpioPortF
-#define LED1_pin		05U
-#define LED1_default	false	// off
+/******************************************************************************
+ * MACRO DEFINITIONS 	    				 								  *
+ *****************************************************************************/
 
-//***********************************************************************************
-// global variables
-//***********************************************************************************
+/* LED0 properties */
+#define	LED0_PORT		gpioPortF
+#define LED0_PIN        4
+#define LED0_DEFAULT	false 	  // LED0 off by default
+
+/* LED1 properties */
+#define LED1_PORT       gpioPortF
+#define LED1_PIN        5
+#define LED1_DEFAULT	false	  // LED1 off by default
+
+/* SI7021 clock and data properties */
+#define I2C_SCL_PORT    gpioPortC
+#define I2C_SCL_PIN     11
+
+#define I2C_SDA_PORT    gpioPortC
+#define I2C_SDA_PIN     10
 
 
-//***********************************************************************************
-// function prototypes
-//***********************************************************************************
+/******************************************************************************
+ * FUNCTION DECLARATIONS  					 								  *
+ *****************************************************************************/
 void gpio_init(void);
-

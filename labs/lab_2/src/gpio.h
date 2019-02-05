@@ -1,12 +1,10 @@
 #include "main.h"
-#include "em_letimer.h"
-#include "cmu.h"
-#include "gpio.h"
+#include "em_gpio.h"
 
 /******************************************************************************
- * filename: letimer.h														  *
+ * filename: gpio.h 														  *
  * 																			  *
- * purpose: contains function declarations and macros used in letimer.c       *
+ * purpose: contains function declarations and macros used in gpio.c          *
  * 																			  *
  * date created: 22 Jan 2019												  *
  *																			  *
@@ -14,15 +12,21 @@
  *****************************************************************************/
 
 /******************************************************************************
- * MACRO DEFINITIONS     					 								  *
+ * MACRO DEFINITIONS 	    				 								  *
  *****************************************************************************/
-#define     LFXO_FREQ       32768u
-#define     ULFRCO_FREQ     1000u
-#define     MAX_COUNT       65535
+
+/* LED0 properties */
+#define	LED0_port		gpioPortF
+#define LED0_pin        4
+#define LED0_default	false 	  // LED0 off by default
+
+/* LED1 properties */
+#define LED1_port       gpioPortF
+#define LED1_pin        5
+#define LED1_default	false	  // LED1 off by default
 
 
 /******************************************************************************
- * FUNCTION DECLARATIONS 					 								  *
+ * FUNCTION DECLARATIONS  					 								  *
  *****************************************************************************/
-void LETIMER0_init(void);
-void LETIMER0_IRQHandler(void);
+void gpio_init(void);
