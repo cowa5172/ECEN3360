@@ -28,10 +28,18 @@
 /* SI7021 clock and data properties */
 #define I2C_SCL_PORT    gpioPortC
 #define I2C_SCL_PIN     11
+#define I2C_SCL_DEFAULT false
 
 #define I2C_SDA_PORT    gpioPortC
 #define I2C_SDA_PIN     10
+#define I2C_SDA_DEFAULT false
 
+// location 15 for SCL and SDA
+// Enable in gpio
+
+
+// Route
+// Route enable
 
 /******************************************************************************
  * FUNCTION DECLARATIONS  					 								  *
