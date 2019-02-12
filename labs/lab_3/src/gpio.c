@@ -1,4 +1,3 @@
-#include "main.h"
 #include "gpio.h"
 
 /******************************************************************************
@@ -7,12 +6,12 @@
 void gpio_init(void){
 // Set LED ports to be standard output drive with default off (cleared)
 //	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthStrongAlternateStrong);
-	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthWeakAlternateWeak);
-	GPIO_PinModeSet(LED0_port, LED0_pin, gpioModePushPull, LED0_default);
+	GPIO_DriveStrengthSet(LED0_PORT, gpioDriveStrengthWeakAlternateWeak);
+	GPIO_PinModeSet(LED0_PORT, LED0_PIN, gpioModePushPull, LED0_DEFAULT);
 
 //	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthWeakAlternateWeak);
-	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, LED1_default);
+	GPIO_DriveStrengthSet(LED1_PORT, gpioDriveStrengthWeakAlternateWeak);
+	GPIO_PinModeSet(LED1_PORT, LED1_PIN, gpioModePushPull, LED1_DEFAULT);
 
 //	Assert SENSOR_ENABLE
 	GPIO_DriveStrengthSet(SENSOR_ENABLE_PORT, gpioDriveStrengthWeakAlternateWeak);

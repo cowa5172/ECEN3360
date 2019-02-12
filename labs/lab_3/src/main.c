@@ -6,16 +6,17 @@
 #include "cmu.h"
 #include "letimer.h"
 #include "emu.h"
+#include "i2c.h"
 
 /******************************************************************************
- * filename: main.c                              														  *
- * 						                                    													  *
+ * filename: main.c                              							  *
+ * 						                                    			      *
  * purpose: initialises all peripherals and modules before entering sleep     *
  *          in a defined energy mode                                          *
- * 																			                                      *
- * date created: 22 Jan 2019												                          *
- *																			                                      *
- * authors: Dylan Oh and Mike Fruge											                      *
+ * 																			  *
+ * date created: 22 Jan 2019												  *
+ *																			  *
+ * authors: Dylan Oh and Mike Fruge											  *
  *****************************************************************************/
 
 int main(void)
@@ -48,7 +49,7 @@ int main(void)
   letimer0_init();
 
   /* Initialise I2C0 */
-  i2c_init()
+  i2c0_init();
 
   /* Enable LETIMER0 */
   LETIMER_Enable(LETIMER0, true);
@@ -62,5 +63,6 @@ int main(void)
   /* Infinite blink loop */
   while (1) {
 	  enter_sleep();
+	  temp_meas();
   }
 }

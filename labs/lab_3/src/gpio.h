@@ -34,6 +34,10 @@
 #define I2C_SDA_PIN     10
 #define I2C_SDA_DEFAULT false
 
+#define SENSOR_ENABLE_PORT gpioPortB
+#define SENSOR_ENABLE_PIN  10
+#define SENSOR_DEFAULT	   true
+
 // location 15 for SCL and SDA
 // Enable in gpio
 

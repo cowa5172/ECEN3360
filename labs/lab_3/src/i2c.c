@@ -67,9 +67,9 @@ uint8_t read_i2c(void){
 
 uint8_t temp_meas(void){
 	start_i2c(I2C_WRITE);
-	write_i2c(TEMP_READ_REG);
+	write_i2c(READ_REG);
 	start_i2c(I2C_READ);
-	while(!(I2C0 -> IF $ I2C_IF_RXDATAV));
+	while(!(I2C0 -> IF & I2C_IF_RXDATAV));
 	uint8_t temp = read_i2c();
 	stop_i2c();
 	return temp;

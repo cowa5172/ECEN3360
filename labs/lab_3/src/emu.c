@@ -26,7 +26,7 @@
  * authors: Dylan Oh and Mike Fruge											  *
  *****************************************************************************/
 
-volatile uint32_t sleep_block_counter[]
+volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
 
 /******************************************************************************
  * FUNCTION DEFINITIONS 					 								  *
@@ -90,13 +90,13 @@ void unblockSleepMode(uint8_t minimumMode){
  */
 
 void enter_sleep(void){
-	if (sleep_block_counter[EM0] > 0){
+	if (sleep_block_counter[0] > 0){
 		return;
-	} else if (sleep_block_counter[EM1] > 0){
+	} else if (sleep_block_counter[1] > 0){
 		return;
-	} else if (sleep_block_counter[EM2] > 0){
+	} else if (sleep_block_counter[2] > 0){
 		EMU_EnterEM1();
-	} else if (sleep_block_counter[EM3] > 0){
+	} else if (sleep_block_counter[3] > 0){
 		EMU_EnterEM2(true);
 	} else {
 		EMU_EnterEM3(true);
