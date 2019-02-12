@@ -90,10 +90,12 @@ void LETIMER0_init(void){
 void LETIMER0_IRQHandler(){
 	/* Grabbing flag source and clearing flags */
 	uint32_t int_flag;
+	CORE_ATOMIC_IRQ_DISABLE();
 	int_flag = LETIMER_IntGet(LETIMER0);
 	LETIMER0 -> IFC = int_flag;
 
 	/* LED0 set when counter = COMP0, cleared when counter = COMP1 */
 	if (int_flag & LETIMER_IF_COMP0){ GPIO_PinOutSet(LED0_port, LED0_pin); }
 	if (int_flag & LETIMER_IF_COMP1){ GPIO_PinOutClear(LED0_port, LED0_pin); }
+	CORE_ATOMIC_IRQ_ENABLE();
 }
