@@ -3,17 +3,17 @@
 #include "main.h"
 
 /******************************************************************************
- * filename: emu.h															  *
- * 																			  *
- * purpose: contains function declarations and macros used in emu.c	          *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
+ * filename: emu.h                                                            *
+ *                                                                            *
+ * purpose: contains function declarations and macros used in emu.c           *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
 /******************************************************************************
- * MACRO DEFINITIONS     					 								  *
+ * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
 #define MAX_EM_ELEMENTS 5
 #define EM0             0
@@ -24,7 +24,7 @@
 
 
 /******************************************************************************
- * FUNCTION DECLARATIONS 					 								  *
+ * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
 void blockSleepMode(uint8_t minimumMode);
 void unblockSleepMode(uint8_t minimumMode);
