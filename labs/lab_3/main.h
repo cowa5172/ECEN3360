@@ -16,9 +16,3 @@
 /******************************************************************************
  * MACRO DEFINITIONS     					 								  *
  *****************************************************************************/
-
-
-/* note that LETIMER0_EM is one energy level lower than the one that the Pearl
- * Gecko will operate in; i.e. if LETIMER0_EM is defined as EM3, then the Pearl
- * Gecko will operate in energy mode 2
- */

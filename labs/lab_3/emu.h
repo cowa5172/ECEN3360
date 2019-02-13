@@ -16,14 +16,12 @@
  * MACRO DEFINITIONS     					 								  *
  *****************************************************************************/
 #define MAX_EM_ELEMENTS 5
+#define EM0             0
+#define EM1             1
+#define EM2             2
+#define EM3             3
+#define EM4             4
 
-//enum sleep_state{
-//	EM0 = 0,
-//	EM1 = 1,
-//	EM2 = 2,
-//	EM3 = 3,
-//	EM4 = 4
-//};
 
 /******************************************************************************
  * FUNCTION DECLARATIONS 					 								  *

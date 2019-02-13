@@ -1,11 +1,14 @@
 #include "emu.h"
 
-/* This code is originally Silicon Labs and copy righted by Silicon Labs� in 2015 and Silicon Labs� grants
- * permission to anyone to use the software for any purpose, including commercial applications, and to alter
- * it, and redistribute it freely subject that the origins is not miss represented, altered source version must
- * be plainly marked, and this notice cannot be altered or removed from any source distribution.
+/* This code is originally Silicon Labs and copy righted by Silicon Labs� in 
+ * 2015 and Silicon Labs� grants permission to anyone to use the software for 
+ * any purpose, including commercial applications, and to alter it, and 
+ * redistribute it freely subject that the origins is not miss represented, 
+ * altered source version must be plainly marked, and this notice cannot be 
+ * altered or removed from any source distribution.
  *
- * Names of routines have been changed to confirm to the naming convention of the application developer.
+ * Names of routines have been changed to confirm to the naming convention of 
+ * the application developer.
  *
  * Routines include:
  *
@@ -90,13 +93,13 @@ void unblockSleepMode(uint8_t minimumMode){
  */
 
 void enter_sleep(void){
-	if (sleep_block_counter[0] > 0){
+	if (sleep_block_counter[EM0] > 0){
 		return;
-	} else if (sleep_block_counter[1] > 0){
+	} else if (sleep_block_counter[EM1] > 0){
 		return;
-	} else if (sleep_block_counter[2] > 0){
+	} else if (sleep_block_counter[EM2] > 0){
 		EMU_EnterEM1();
-	} else if (sleep_block_counter[3] > 0){
+	} else if (sleep_block_counter[EM3] > 0){
 		EMU_EnterEM2(true);
 	} else {
 		EMU_EnterEM3(true);

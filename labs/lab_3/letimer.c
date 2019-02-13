@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 /*
- * function name: LETIMER0_init
+ * function name: letimer0_init
  *
  * description: Initialises the LETIMER0 by setting the COMP0 and COMP1
  *  			registers, adjusting the prescaler, enabling repeat free mode,

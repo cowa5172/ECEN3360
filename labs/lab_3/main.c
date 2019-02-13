@@ -9,14 +9,14 @@
 #include "i2c.h"
 
 /******************************************************************************
- * filename: main.c                              							  *
- * 						                                    			      *
+ * filename: main.c                              							                *
+ * 						                                    			                      *
  * purpose: initialises all peripherals and modules before entering sleep     *
  *          in a defined energy mode                                          *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
+ * 																			                                      *
+ * date created: 22 Jan 2019												                          *
+ *																			                                      *
+ * authors: Keith Graham, Dylan Oh, and Mike Fruge											      *
  *****************************************************************************/
 
 int main(void)
@@ -58,11 +58,11 @@ int main(void)
   /* Determines minimum sleep mode */
   blockSleepMode(LETIMER0_EM);
 
+  /* Enables interrupts in the core */
   CORE_ATOMIC_IRQ_ENABLE();
 
-  /* Infinite blink loop */
   while (1) {
-	  enter_sleep();
-	  temp_meas();
+      enter_sleep();
+	    temp_meas();
   }
 }
