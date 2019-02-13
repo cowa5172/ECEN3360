@@ -4,17 +4,17 @@
 #include "gpio.h"
 
 /******************************************************************************
- * filename: i2c.h									    					  *
- * 																			  *
+ * filename: i2c.h                                                            *
+ *                                                                            *
  * purpose: contains function declarations and macros used in i2c.c           *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
 /******************************************************************************
- * MACRO DEFINITIONS     					 								  *
+ * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
 #define SI7021_FREQ   400000 // frequency of i2c transmission in hertz
 #define SLAVE_ADDR    0x40   // address of the SI7021 peripheral
@@ -26,7 +26,7 @@
 
 
 /******************************************************************************
- * FUNCTION DECLARATIONS 					 								  *
+ * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
 void i2c0_init(void);
 void reset_i2c(void);
