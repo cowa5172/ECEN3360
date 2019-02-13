@@ -4,25 +4,25 @@
 #include "letimer.h"
 
 /******************************************************************************
- * filename: cmu.c															  *
- * 																			  *
+ * filename: cmu.c                                                            *
+ *                                                                            *
  * purpose: Contains functions pertaining to the CMU of the Pearl Gecko and   *
- * 			that enable the clocks as well as set their frequencies           *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Keith Graham, Dylan Oh, and Mike Fruge							  *
+ * 			    that enable the clocks as well as set their frequencies           *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
  * function name: cmu_init
  *
  * description: Configures the clock tree, selects the clocks to be used, and 
- * 				initialises the clocks
+ *              initialises the clocks
  * 
  * arguments: none
  * 
