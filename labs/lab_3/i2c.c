@@ -1,25 +1,25 @@
 #include "i2c.h"
 
 /******************************************************************************
- * filename: i2c.c															  *
- * 																			  *
+ * filename: i2c.c                                                            *
+ *                                                                            *
  * purpose: Contains functions pertaining to the operation of the LETIMER0    *
- * 			peripheral, such as initialisation and interrupt handling         *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
+ *          peripheral, such as initialisation and interrupt handling         *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
  * function name: i2c0_init
  *
  * description: Initialises I2C0 by setting frequencies of the bus, routing
- * 				clock and data pins, and enabling interrupts
+ *              clock and data pins, and enabling interrupts
  *
  * arguments: none
  *
@@ -27,8 +27,8 @@
  */
 
 void i2c0_init(void){
-	/* Initialise I2C0 */
-	I2C_Init_TypeDef i2c_init;
+    /* Initialise I2C0 */
+    I2C_Init_TypeDef i2c_init;
     i2c_init.enable  = false;            // Disable enable until after setup complete
     i2c_init.master  = true;             // Set to master mode
     i2c_init.refFreq = 0;                // Use currently configured reference clock
@@ -45,17 +45,17 @@ void i2c0_init(void){
 
     /* Enable interrupts */
     I2C0 -> IFC = I2C_IFC_CLTO | I2C_IFC_BITO;   // clear any previous interrupt flags
-	I2C0 -> IFC = I2C_IFC_ACK; 					 // clear any previous interrupt flags
+    I2C0 -> IFC = I2C_IFC_ACK;                   // clear any previous interrupt flags
     I2C0 -> IEN = I2C_IEN_CLTO | I2C_IEN_BITO;   // enable interrupts
-	I2C0 -> IEN = I2C_IEN_ACK | I2C_IEN_RXDATAV; // enable interrupts
+    I2C0 -> IEN = I2C_IEN_ACK | I2C_IEN_RXDATAV; // enable interrupts
 
-	/* Resetting I2C */
-	for (int i=0; i<9; i++)
-	{
-		GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
-		GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
-	}
-	reset_i2c();
+    /* Resetting I2C */
+    for (int i=0; i<9; i++)
+    {
+      GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
+      GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
+    }
+    reset_i2c();
 }
 
 /*****************************************************************************/
