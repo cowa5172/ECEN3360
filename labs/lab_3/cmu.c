@@ -7,7 +7,7 @@
  * filename: cmu.c                                                            *
  *                                                                            *
  * purpose: Contains functions pertaining to the CMU of the Pearl Gecko and   *
- * 			    that enable the clocks as well as set their frequencies           *
+ *          that enable the clocks as well as set their frequencies           *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
