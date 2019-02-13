@@ -5,26 +5,26 @@
 #include "emu.h"
 
 /******************************************************************************
- * filename: letimer.c														  *
- * 																			  *
+ * filename: letimer.c                                                        *
+ *                                                                            *
  * purpose: Contains functions pertaining to the operation of the LETIMER0    *
- * 			peripheral, such as initialisation and interrupt handling         *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Keith Graham, Dylan Oh, and Mike Fruge							  *
+ *          peripheral, such as initialisation and interrupt handling         *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
  * function name: letimer0_init
  *
  * description: Initialises the LETIMER0 by setting the COMP0 and COMP1
- *  			registers, adjusting the prescaler, enabling repeat free mode,
- *				disabling underflow, and enabling interrupts
+ *              registers, adjusting the prescaler, enabling repeat free mode,
+ *              disabling underflow, and enabling interrupts
  *
  * arguments: none
  *
@@ -89,8 +89,8 @@ void letimer0_init(void){
  * function name: LETIMER0_IRQHandler
  *
  * description: The interrupt handler for the LETIMER0. Called when either
- * 				COMP0 or COMP1 is reached in the timer and is used to turn on
- * 				and off LED0 periodically.
+ *              COMP0 or COMP1 is reached in the timer and is used to turn on
+ *              and off LED0 periodically.
  *
  * arguments: none
  *
