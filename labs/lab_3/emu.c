@@ -19,27 +19,27 @@
  */
 
 /******************************************************************************
- * filename: emu.c															  *
- * 																			  *
+ * filename: emu.c                                                            *
+ *                                                                            *
  * purpose: Contains functions pertaining to the EMU of the Pearl Gecko and   *
- * 			that modify the energy mode that the Pearl Gecko operates in      *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
+ *          that modify the energy mode that the Pearl Gecko operates in      *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
 volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
 
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
  * function name: blockSleepMode
  *
  * description: Sets a limit on the minimum allowable energy mode that the
- * 				Pearl Gecko can operate in
+ *              Pearl Gecko can operate in
  * 
  * arguments:
  * argument		type		I/O		description
@@ -61,7 +61,7 @@ void blockSleepMode(uint8_t minimumMode){
  * function name: unblockSleepMode
  *
  * description: Removes limit on the minimum allowable energy mode that the
- * 				Pearl Gecko can operate in
+ *              Pearl Gecko can operate in
  * 
  * arguments:
  * argument		type		I/O		description
@@ -85,7 +85,7 @@ void unblockSleepMode(uint8_t minimumMode){
  * function name: enter_sleep
  *
  * description: Puts the Pearl Gecko to sleep in the lowest energy mode
- * 				allowed by the block and unblock functions
+ *              allowed by the block and unblock functions
  * 
  * arguments: none
  * 
