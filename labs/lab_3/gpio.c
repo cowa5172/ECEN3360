@@ -1,18 +1,18 @@
 #include "gpio.h"
 
 /******************************************************************************
- * filename: gpio.c															  *
- * 																			  *
+ * filename: gpio.c                                                           *
+ *                                                                            *
  * purpose: Contains functions pertaining to the initialisation of the GPIO   *
- * 			of the Pearl Gecko      										  *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Keith Graham, Dylan Oh, and Mike Fruge							  *
+ *          of the Pearl Gecko                                                *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
