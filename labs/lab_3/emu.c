@@ -1,11 +1,14 @@
 #include "emu.h"
 
-/* This code is originally Silicon Labs and copy righted by Silicon Labs� in 2015 and Silicon Labs� grants
- * permission to anyone to use the software for any purpose, including commercial applications, and to alter
- * it, and redistribute it freely subject that the origins is not miss represented, altered source version must
- * be plainly marked, and this notice cannot be altered or removed from any source distribution.
+/* This code is originally Silicon Labs and copy righted by Silicon Labs� in 
+ * 2015 and Silicon Labs� grants permission to anyone to use the software for 
+ * any purpose, including commercial applications, and to alter it, and 
+ * redistribute it freely subject that the origins is not miss represented, 
+ * altered source version must be plainly marked, and this notice cannot be 
+ * altered or removed from any source distribution.
  *
- * Names of routines have been changed to confirm to the naming convention of the application developer.
+ * Names of routines have been changed to confirm to the naming convention of 
+ * the application developer.
  *
  * Routines include:
  *
@@ -14,33 +17,29 @@
  * void Enter_Sleep(void);
  *
  */
- 
-/******************************************************************************
- * filename: emu.c															  *
- * 																			  *
- * purpose: Contains functions pertaining to the EMU of the Pearl Gecko and   *
- * 			that modify the energy mode that the Pearl Gecko operates in      *
- * 																			  *
- * date created: 22 Jan 2019												  *
- *																			  *
- * authors: Dylan Oh and Mike Fruge											  *
- *****************************************************************************/
 
 /******************************************************************************
- * GLOBAL VARIABLES      					 								  *
+ * filename: emu.c                                                            *
+ *                                                                            *
+ * purpose: Contains functions pertaining to the EMU of the Pearl Gecko and   *
+ *          that modify the energy mode that the Pearl Gecko operates in      *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
+
 volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
 
-
 /******************************************************************************
- * FUNCTION DEFINITIONS 					 								  *
+ * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
 /*
  * function name: blockSleepMode
  *
  * description: Sets a limit on the minimum allowable energy mode that the
- * 				Pearl Gecko can operate in
+ *              Pearl Gecko can operate in
  * 
  * arguments:
  * argument		type		I/O		description
@@ -62,7 +61,7 @@ void blockSleepMode(uint8_t minimumMode){
  * function name: unblockSleepMode
  *
  * description: Removes limit on the minimum allowable energy mode that the
- * 				Pearl Gecko can operate in
+ *              Pearl Gecko can operate in
  * 
  * arguments:
  * argument		type		I/O		description
@@ -86,7 +85,7 @@ void unblockSleepMode(uint8_t minimumMode){
  * function name: enter_sleep
  *
  * description: Puts the Pearl Gecko to sleep in the lowest energy mode
- * 				allowed by the block and unblock functions
+ *              allowed by the block and unblock functions
  * 
  * arguments: none
  * 
