@@ -4,7 +4,7 @@
 /******************************************************************************
  * filename: cmu.h                                                            *
  *                                                                            *
- * purpose: contains function declarations and macros used in cmu.c           *
+ * purpose: Contains function declarations and macros used in cmu.c           *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *

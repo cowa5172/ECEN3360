@@ -3,8 +3,8 @@
 /******************************************************************************
  * filename: i2c.c                                                            *
  *                                                                            *
- * purpose: Contains functions pertaining to the operation of the LETIMER0    *
- *          peripheral, such as initialisation and interrupt handling         *
+ * purpose: Contains driver functions for I2C0, including basic operations    *
+ *          like start and stop, read and write, initialisation, etc.         *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -29,11 +29,11 @@
 void i2c0_init(void){
     /* Initialise I2C0 */
     I2C_Init_TypeDef i2c_init;
-    i2c_init.enable  = false;            // Disable enable until after setup complete
-    i2c_init.master  = true;             // Set to master mode
-    i2c_init.refFreq = 0;                // Use currently configured reference clock
-    i2c_init.freq    = SI7021_FREQ;      // Set to SI7021 max frequency
-    i2c_init.clhr    = i2cClockHLRFast;  // Set to use 4:4 low/high duty cycle
+    i2c_init.enable  = false;            // disable during initialisation
+    i2c_init.master  = true;             // set master mode
+    i2c_init.refFreq = 0;                // use current reference clock
+    i2c_init.freq    = SI7021_FREQ;      // set to SI7021 max frequency
+    i2c_init.clhr    = i2cClockHLRFast;  // set to use 4:4 low/high duty cycle
     I2C_Init(I2C0, &i2c_init);
 
     /* Route SDA and SCL pins */

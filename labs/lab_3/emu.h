@@ -5,7 +5,7 @@
 /******************************************************************************
  * filename: emu.h                                                            *
  *                                                                            *
- * purpose: contains function declarations and macros used in emu.c           *
+ * purpose: Contains function declarations and macros used in emu.c           *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -26,6 +26,6 @@
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
-void blockSleepMode(uint8_t minimumMode);
-void unblockSleepMode(uint8_t minimumMode);
+void blockSleepMode(uint8_t);
+void unblockSleepMode(uint8_t);
 void enter_sleep(void);
