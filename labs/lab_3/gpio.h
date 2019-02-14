@@ -36,7 +36,7 @@
 /* Sensor properties */
 #define SENSOR_EN_PORT  gpioPortB
 #define SENSOR_EN_PIN   10
-#define SENSOR_DEFAULT	true
+#define SENSOR_DEFAULT	false
 
 
 /******************************************************************************

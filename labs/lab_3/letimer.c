@@ -3,6 +3,8 @@
 #include "gpio.h"
 #include "cmu.h"
 #include "emu.h"
+#include "i2c.h"
+#include "si7021.h"
 
 /******************************************************************************
  * filename: letimer.c                                                        *
@@ -36,7 +38,7 @@ void letimer0_init(void){
     unsigned int    letimer0_tick_seconds;
     unsigned int    pres_cal, effective_pres_cal;
   
-    if (LETIMER0_EM == 4) letimer0_tick_seconds = ULFRCO_FREQ;
+    if (LETIMER0_EM == EM3) letimer0_tick_seconds = ULFRCO_FREQ;
     else letimer0_tick_seconds = LFXO_FREQ;
 
     // second ticks required before prescaling
@@ -51,7 +53,7 @@ void letimer0_init(void){
         effective_pres_cal = effective_pres_cal << 1;
     }
 
-    on_ticks = seconds_ticks - (LED_ON_TIME * letimer0_tick_seconds) / 1000;  //Adjust for milli-seconds
+    on_ticks = seconds_ticks - (LED_ON_TIME * letimer0_tick_seconds);
 
     if (effective_pres_cal > 1) CMU_ClockPrescSet(cmuClock_LETIMER0, effective_pres_cal);
 
@@ -72,8 +74,8 @@ void letimer0_init(void){
 
     LETIMER_Init(LETIMER0, &letimer_init);			// Initialising
 
-    LETIMER_CompareSet(LETIMER0, 0, on_ticks);		// setting comp0 register
-    LETIMER_CompareSet(LETIMER0, 1, seconds_ticks);	// setting comp1 register
+    LETIMER_CompareSet(LETIMER0, 0, seconds_ticks);		// setting comp0 register
+    LETIMER_CompareSet(LETIMER0, 1, on_ticks);	// setting comp1 register
 
 
     /* Initialising interrupts on LETIMER COMP0 and COMP1 */
@@ -106,7 +108,19 @@ void LETIMER0_IRQHandler(void){
     LETIMER0 -> IFC = int_flag;
 
     /* LED0 set when counter = COMP0, cleared when counter = COMP1 */
-    if (int_flag & LETIMER_IF_COMP0){ GPIO_PinOutSet(LED0_PORT, LED0_PIN); }
-    if (int_flag & LETIMER_IF_COMP1){ GPIO_PinOutClear(LED0_PORT, LED0_PIN); }
+    if (int_flag & LETIMER_IF_COMP0){ 
+        GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
+    }
+    if (int_flag & LETIMER_IF_COMP1){
+        disable_LPM();
+        uint8_t temp = measure_temp();
+        temp = convert_temp(temp);
+        if (temp < THRESHOLD_TEMP){
+            GPIO_PinOutSet(LED0_PORT, LED0_PIN);
+        } else {
+            GPIO_PinOutClear(LED0_PORT, LED0_PIN);
+        }
+        enable_LPM();
+    }
     CORE_ATOMIC_IRQ_ENABLE();
 }

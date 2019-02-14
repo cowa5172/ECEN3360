@@ -32,11 +32,11 @@ void gpio_init(void){
     GPIO_PinModeSet(LED0_PORT, LED0_PIN, gpioModePushPull, LED0_DEFAULT);
     GPIO_PinModeSet(LED1_PORT, LED1_PIN, gpioModePushPull, LED1_DEFAULT);
 
-    /* Assert SENSOR_ENABLE */
+    /* Deassert SENSOR_ENABLE */
     GPIO_DriveStrengthSet(SENSOR_EN_PORT, gpioDriveStrengthWeakAlternateWeak);
     GPIO_PinModeSet(SENSOR_EN_PORT, SENSOR_EN_PIN, gpioModePushPull, SENSOR_DEFAULT);
 
-    /* Initialize SCL and SDA pins */
-    GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeWiredAnd, I2C_SCL_DEFAULT);
-    GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeWiredAnd, I2C_SDA_DEFAULT);
+    /* Initialise SCL and SDA pins */
+    GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeDisabled, I2C_SCL_DEFAULT);
+    GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeDisabled, I2C_SDA_DEFAULT);
 }

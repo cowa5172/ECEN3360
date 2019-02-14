@@ -39,23 +39,6 @@ void i2c0_init(void){
     /* Route SDA and SCL pins */
     I2C0 -> ROUTELOC0 = I2C_ROUTELOC0_SCLLOC_LOC15 | I2C_ROUTELOC0_SDALOC_LOC15;
     I2C0 -> ROUTEPEN  = I2C_ROUTEPEN_SCLPEN | I2C_ROUTEPEN_SDAPEN;
-
-    /* Set prescaled clock cycle timeouts */
-    I2C0 -> CTRL |= I2C_CTRL_CLTO_1024PCC | I2C_CTRL_BITO_160PCC;
-
-    /* Enable interrupts */
-    I2C0 -> IFC = I2C_IFC_CLTO | I2C_IFC_BITO;   // clear any previous interrupt flags
-    I2C0 -> IFC = I2C_IFC_ACK;                   // clear any previous interrupt flags
-    I2C0 -> IEN = I2C_IEN_CLTO | I2C_IEN_BITO;   // enable interrupts
-    I2C0 -> IEN = I2C_IEN_ACK | I2C_IEN_RXDATAV; // enable interrupts
-
-    /* Resetting I2C */
-    for (int i=0; i<9; i++)
-    {
-        GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
-        GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
-    }
-    reset_i2c();
 }
 
 /*****************************************************************************/
@@ -71,6 +54,11 @@ void i2c0_init(void){
  */
 
 void reset_i2c(void){
+    for (int i=0; i<9; i++){
+        GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
+        GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
+    }
+
     if (I2C0 -> STATE & I2C_STATE_BUSY){
         I2C0 -> CMD = I2C_CMD_ABORT;
     }
@@ -119,7 +107,7 @@ void stop_i2c(void){
 /*****************************************************************************/
 
 /*
- * function name: wait_i2c
+ * function name: wait_ACK
  *
  * description: Waits for an ACK interrupt signal to prevent miscommunication
  *
@@ -128,9 +116,25 @@ void stop_i2c(void){
  * returns: none
  */
 
-void wait_i2c(void){
+void wait_ACK(void){
     while(!(I2C0 -> IF & I2C_IF_ACK));
     I2C0 -> IFC = I2C_IFC_ACK;
+}
+
+/*****************************************************************************/
+
+/*
+ * function name: wait_RXDATAV
+ *
+ * description: Waits for a valid byte in RXDATA
+ *
+ * arguments: none
+ *
+ * returns: none
+ */
+
+void wait_RXDATAV(void){
+    while(!(I2C0 -> IF & I2C_IF_RXDATAV));
 }
 
 /*****************************************************************************/
@@ -174,31 +178,6 @@ uint8_t read_i2c(void){
     uint8_t buf = I2C0 -> RXDATA;
     I2C0 -> CMD = I2C_CMD_NACK;
     return buf;
-}
-
-/*****************************************************************************/
-
-/*
- * function name: temp_meas
- *
- * description: Protocol to read the temperature data from the SI7021
- *
- * arguments: none
- *
- * returns: none
- * return       type        description
- * --------     ----        -----------
- * temp         uint8_t     temperature data
- */
-
-uint8_t temp_meas(void){
-    start_i2c(I2C_WRITE);
-    write_i2c(READ_REG);
-    start_i2c(I2C_READ);
-    while(!(I2C0 -> IF & I2C_IF_RXDATAV));
-    uint8_t temp = read_i2c();
-    stop_i2c();
-    return temp;
 }
 
 /*****************************************************************************/

@@ -1,10 +1,7 @@
-#include "em_letimer.h"
-#include "emu.h"
-
 /******************************************************************************
- * filename: letimer.h                                                        *
+ * filename: i2c.h                                                            *
  *                                                                            *
- * purpose: contains function declarations and macros used in letimer.c       *
+ * purpose: contains function declarations and macros used in i2c.c           *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -14,16 +11,9 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define     LFXO_FREQ       32768u
-#define     ULFRCO_FREQ     1000u
-#define     MAX_COUNT       65535
-#define     LETIMER_PERIOD  4
-#define     LED_ON_TIME     0.4
-#define     LETIMER0_EM     3
-
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
-void letimer0_init(void);
-void LETIMER0_IRQHandler(void);
+uint8_t read_user_reg(void);
+uint8_t measure_temp(void);
