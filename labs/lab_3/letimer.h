@@ -1,5 +1,4 @@
 #include "em_letimer.h"
-#include "emu.h"
 
 /******************************************************************************
  * filename: letimer.h                                                        *
@@ -14,9 +13,9 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define     LFXO_FREQ       32768u
-#define     ULFRCO_FREQ     1000u
-#define     MAX_COUNT       65535
+#define     LFXO_FREQ       32768
+#define     ULFRCO_FREQ     1000
+#define     MAX_COUNT       65536
 #define     LETIMER_PERIOD  1.75
 #define     LED_ON_TIME     0.4
 #define     LETIMER0_EM     3

@@ -55,14 +55,11 @@ int main(void)
     LETIMER_Enable(LETIMER0, true);
     I2C_Enable(I2C0, true);
 
-    /* Determines minimum sleep mode */
-    blockSleepMode(LETIMER0_EM);
-
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        enter_sleep();
+        //enter_sleep();
         temp_meas();
     }
 }
