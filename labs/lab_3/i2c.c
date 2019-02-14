@@ -82,12 +82,12 @@ void reset_i2c(void){
  * function name: start_i2c
  *
  * description: Starts the I2C and sends the write signal to the slave
- * 				peripheral
+ *              peripheral
  *
  * arguments:
- * argument		type    	description
- * --------		----		-----------
- * RW       	bool        determines whether operation is read or write
+ * argument     type        description
+ * --------     ----        -----------
+ * RW           bool        determines whether operation is read or write
  * 
  * returns: none
  */
@@ -104,7 +104,7 @@ void start_i2c(bool RW){
  * function name: stop_i2c
  *
  * description: Sends a NACK to the peripheral to cease communication and stops
- * 				the I2C
+ *              the I2C
  *
  * arguments: none
  *
@@ -139,12 +139,12 @@ void wait_i2c(void){
  * function name: write_i2c
  *
  * description: Loads a byte of data to the TX register to be sent to the
- * 				peripheral
+ *              peripheral
  *
  * arguments:
- * argument		type    	description
- * --------		----		-----------
- * data       	uint8_t     byte to be sent
+ * argument     type        description
+ * --------     ----        -----------
+ * data         uint8_t     byte to be sent
  *
  * returns: none
  */
@@ -160,14 +160,14 @@ void write_i2c(uint8_t data){
  * function name: read_i2c
  *
  * description: Reads a byte of data from the RX register before sending a
- * 				NACK signal to cease communication
+ *              NACK signal to cease communication
  *
  * arguments: none
  *
  * returns:
- * return		type    	description
- * --------		----		-----------
- * buf       	uint8_t     byte received from peripheral
+ * return       type        description
+ * --------     ----        -----------
+ * buf          uint8_t     byte received from peripheral
  */
 
 uint8_t read_i2c(void){
@@ -186,9 +186,9 @@ uint8_t read_i2c(void){
  * arguments: none
  *
  * returns: none
- * return		type    	description
- * --------		----		-----------
- * temp       	uint8_t     temperature data
+ * return       type        description
+ * --------     ----        -----------
+ * temp         uint8_t     temperature data
  */
 
 uint8_t temp_meas(void){

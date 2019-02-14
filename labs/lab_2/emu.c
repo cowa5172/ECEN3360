@@ -46,9 +46,9 @@ volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
  *              Pearl Gecko can operate in
  * 
  * arguments:
- * argument		type		I/O		description
- * --------		----	    ---		-----------
- * minimumMode	uint8_t		input	minimum mode the Pearl Gecko can operate in
+ * argument     type        description
+ * --------     ----        -----------
+ * minimumMode  uint8_t     minimum mode the Pearl Gecko can operate in
  * 
  * returns: none
  */
@@ -68,9 +68,9 @@ void blockSleepMode(uint8_t minimumMode){
  *              Pearl Gecko can operate in
  * 
  * arguments:
- * argument		type		I/O		description
- * --------		----	    ---		-----------
- * minimumMode	uint8_t		input	minimum mode the Pearl Gecko can operate in
+ * argument     type        description
+ * --------     ----        -----------
+ * minimumMode  uint8_t     minimum mode the Pearl Gecko can operate in
  * 
  * returns: none
  */

@@ -32,9 +32,9 @@
  */
 
 void letimer0_init(void){
-    unsigned int	seconds_ticks, on_ticks;
-    unsigned int	letimer0_tick_seconds;
-    unsigned int	pres_cal, effective_pres_cal;
+    unsigned int    seconds_ticks, on_ticks;
+    unsigned int    letimer0_tick_seconds;
+    unsigned int    pres_cal, effective_pres_cal;
   
     if (LETIMER0_EM == 4) letimer0_tick_seconds = ULFRCO_FREQ;
     else letimer0_tick_seconds = LFXO_FREQ;
