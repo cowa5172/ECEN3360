@@ -52,8 +52,8 @@ void i2c0_init(void){
     /* Resetting I2C */
     for (int i=0; i<9; i++)
     {
-      GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
-      GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
+        GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
+        GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
     }
     reset_i2c();
 }
