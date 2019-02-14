@@ -29,7 +29,11 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
+/******************************************************************************
+ * GLOBAL VARIABLES                                                           *
+ *****************************************************************************/
 volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
+
 
 /******************************************************************************
  * FUNCTION DEFINITIONS                                                       *
@@ -50,9 +54,9 @@ volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
  */
 
 void blockSleepMode(uint8_t minimumMode){
-	CORE_ATOMIC_IRQ_DISABLE();
-	sleep_block_counter[minimumMode]++;
-	CORE_ATOMIC_IRQ_ENABLE();
+    CORE_ATOMIC_IRQ_DISABLE();
+    sleep_block_counter[minimumMode]++;
+    CORE_ATOMIC_IRQ_ENABLE();
 }
 
 /*****************************************************************************/
@@ -72,11 +76,11 @@ void blockSleepMode(uint8_t minimumMode){
  */
 
 void unblockSleepMode(uint8_t minimumMode){
-	CORE_ATOMIC_IRQ_DISABLE();
-	if (sleep_block_counter[minimumMode] > 0){
-		sleep_block_counter[minimumMode]--;
-	}
-	CORE_ATOMIC_IRQ_ENABLE();
+    CORE_ATOMIC_IRQ_DISABLE();
+    if (sleep_block_counter[minimumMode] > 0){
+        sleep_block_counter[minimumMode]--;
+    }
+    CORE_ATOMIC_IRQ_ENABLE();
 }
 
 /*****************************************************************************/
@@ -93,15 +97,15 @@ void unblockSleepMode(uint8_t minimumMode){
  */
 
 void enter_sleep(void){
-	if (sleep_block_counter[EM0] > 0){
-		return;
-	} else if (sleep_block_counter[EM1] > 0){
-		return;
-	} else if (sleep_block_counter[EM2] > 0){
-		EMU_EnterEM1();
-	} else if (sleep_block_counter[EM3] > 0){
-		EMU_EnterEM2(true);
-	} else {
-		EMU_EnterEM3(true);
-	}
+    if (sleep_block_counter[EM0] > 0){
+        return;
+    } else if (sleep_block_counter[EM1] > 0){
+        return;
+    } else if (sleep_block_counter[EM2] > 0){
+        EMU_EnterEM1();
+    } else if (sleep_block_counter[EM3] > 0){
+        EMU_EnterEM2(true);
+    } else {
+        EMU_EnterEM3(true);
+    }
 }

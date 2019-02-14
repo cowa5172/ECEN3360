@@ -71,9 +71,9 @@ void i2c0_init(void){
  */
 
 void reset_i2c(void){
-	if (I2C0 -> STATE & I2C_STATE_BUSY){
-		I2C0 -> CMD = I2C_CMD_ABORT;
-	}
+    if (I2C0 -> STATE & I2C_STATE_BUSY){
+        I2C0 -> CMD = I2C_CMD_ABORT;
+    }
 }
 
 /*****************************************************************************/
@@ -93,9 +93,9 @@ void reset_i2c(void){
  */
 
 void start_i2c(bool RW){
-	I2C0 -> CMD = I2C_CMD_START;
-	I2C0 -> TXDATA = (SLAVE_ADDR << 1) | RW;
-	wait_i2c();
+    I2C0 -> CMD = I2C_CMD_START;
+    I2C0 -> TXDATA = (SLAVE_ADDR << 1) | RW;
+    wait_i2c();
 }
 
 /*****************************************************************************/
@@ -112,8 +112,8 @@ void start_i2c(bool RW){
  */
 
 void stop_i2c(void){
-	I2C0 -> CMD = I2C_CMD_NACK;
-	I2C0 -> CMD = I2C_CMD_STOP;
+    I2C0 -> CMD = I2C_CMD_NACK;
+    I2C0 -> CMD = I2C_CMD_STOP;
 }
 
 /*****************************************************************************/
@@ -129,8 +129,8 @@ void stop_i2c(void){
  */
 
 void wait_i2c(void){
-	while(!(I2C0 -> IF & I2C_IF_ACK));
-	I2C0 -> IFC = I2C_IFC_ACK;
+    while(!(I2C0 -> IF & I2C_IF_ACK));
+    I2C0 -> IFC = I2C_IFC_ACK;
 }
 
 /*****************************************************************************/
@@ -171,9 +171,9 @@ void write_i2c(uint8_t data){
  */
 
 uint8_t read_i2c(void){
-	uint8_t buf = I2C0 -> RXDATA;
-	I2C0 -> CMD = I2C_CMD_NACK;
-	return buf;
+    uint8_t buf = I2C0 -> RXDATA;
+    I2C0 -> CMD = I2C_CMD_NACK;
+    return buf;
 }
 
 /*****************************************************************************/
@@ -192,13 +192,13 @@ uint8_t read_i2c(void){
  */
 
 uint8_t temp_meas(void){
-	start_i2c(I2C_WRITE);
-	write_i2c(READ_REG);
-	start_i2c(I2C_READ);
-	while(!(I2C0 -> IF & I2C_IF_RXDATAV));
-	uint8_t temp = read_i2c();
-	stop_i2c();
-	return temp;
+    start_i2c(I2C_WRITE);
+    write_i2c(READ_REG);
+    start_i2c(I2C_READ);
+    while(!(I2C0 -> IF & I2C_IF_RXDATAV));
+    uint8_t temp = read_i2c();
+    stop_i2c();
+    return temp;
 }
 
 /*****************************************************************************/
@@ -214,8 +214,8 @@ uint8_t temp_meas(void){
  */
 
 void I2C0_IRQHandler(void){
-	CORE_ATOMIC_IRQ_DISABLE();
-	unsigned int int_flag = I2C0 -> IF;
-	I2C0 -> IFC = int_flag;
-	CORE_ATOMIC_IRQ_ENABLE();
+    CORE_ATOMIC_IRQ_DISABLE();
+    unsigned int int_flag = I2C0 -> IF;
+    I2C0 -> IFC = int_flag;
+    CORE_ATOMIC_IRQ_ENABLE();
 }

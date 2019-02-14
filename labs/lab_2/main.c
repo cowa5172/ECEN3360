@@ -8,14 +8,14 @@
 #include "emu.h"
 
 /******************************************************************************
- * filename: main.c                              														  *
- * 						                                    													  *
+ * filename: main.c                                                           *
+ *                                                                            *
  * purpose: initialises all peripherals and modules before entering sleep     *
  *          in a defined energy mode                                          *
- * 																			                                      *
- * date created: 22 Jan 2019												                          *
- *																			                                      *
- * authors: Dylan Oh and Mike Fruge											                      *
+ *                                                                            *
+ * date created: 22 Jan 2019                                                  *
+ *                                                                            *
+ * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
 int main(void)
