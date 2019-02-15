@@ -1,10 +1,7 @@
-#include "main.h"
-#include "em_cmu.h"
-
 /******************************************************************************
- * filename: cmu.h                                                            *
+ * filename: si7021.h                                                         *
  *                                                                            *
- * purpose: Contains function declarations and macros used in cmu.c           *
+ * purpose: Contains function declarations and macros used in si7021.c        *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -12,6 +9,14 @@
  *****************************************************************************/
 
 /******************************************************************************
+ * MACRO DEFINITIONS                                                          *
+ *****************************************************************************/
+
+/******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
-void cmu_init(void);
+void enable_LPM(void);
+void disable_LPM(void);
+uint8_t read_user_reg(void);
+uint8_t measure_temp(void);
+uint8_t convert_temp(uint8_t);

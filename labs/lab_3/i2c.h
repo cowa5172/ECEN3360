@@ -22,7 +22,8 @@
 #define I2C_READ      1      // read signal for the i2c
 #define WRITE_REG     0xE6   // address of the user write command register
 #define READ_REG      0xE7   // address of the user read command register
-#define BIT_RES       0x81   // specifies 12 bit resolution for the SI7021
+#define BIT_RES_12    0x81   // specifies 12 bit resolution for the SI7021
+#define BIT_RES_14    0x00   // specifies 14 bit resolution for the SI7021
 
 
 /******************************************************************************
@@ -30,10 +31,10 @@
  *****************************************************************************/
 void i2c0_init(void);
 void reset_i2c(void);
-void start_i2c(bool RW);
+void start_i2c(bool);
 void stop_i2c(void);
-void wait_i2c(void);
-void write_i2c(uint8_t data);
+void wait_ACK(void);
+void wait_RXDATAV(void);
+void write_i2c(uint8_t);
 uint8_t read_i2c(void);
-uint8_t temp_meas(void);
 void I2C0_IRQHandler(void);

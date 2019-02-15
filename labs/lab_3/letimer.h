@@ -3,7 +3,7 @@
 /******************************************************************************
  * filename: letimer.h                                                        *
  *                                                                            *
- * purpose: contains function declarations and macros used in letimer.c       *
+ * purpose: Contains function declarations and macros used in letimer.c       *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -13,10 +13,10 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define     LFXO_FREQ       32768
-#define     ULFRCO_FREQ     1000
+#define     LFXO_TICKS      32768u
+#define     ULFRCO_TICKS    1000u
 #define     MAX_COUNT       65536
-#define     LETIMER_PERIOD  1.75
+#define     LETIMER_PERIOD  4
 #define     LED_ON_TIME     0.4
 #define     LETIMER0_EM     3
 
