@@ -3,6 +3,7 @@
 #include "i2c.h"
 #include "gpio.h"
 #include "emu.h"
+#include "letimer.h"
 
 /*
  * function name: enable_LPM
@@ -77,12 +78,12 @@ void disable_LPM(void){
  */
 
 uint8_t read_user_reg(void){
-    start_i2c(I2C_WRITE);
-    write_i2c(READ_REG);
-    start_i2c(I2C_READ);
-    wait_RXDATAV(void);
-    uint8_t data = read_i2c();
-    stop_i2c();
+    start_i2c(I2C_WRITE);       // Start I2C to initiate a write
+    write_i2c(READ_REG);        // Write the location of the user read register
+    start_i2c(I2C_READ);        // Restart the I2C to initiate a read
+    wait_RXDATAV(void);         // Wait for valid data in receive buffer
+    uint8_t data = read_i2c();  // Pull data from buffer into local variable
+    stop_i2c();                 // Stop I2C
     return data;
 }
 
@@ -102,10 +103,12 @@ uint8_t read_user_reg(void){
  */
 
 uint8_t measure_temp(void){
-
+    start_i2c(I2C_WRITE);
+    write_i2c(TEMP_REG);
+    start_i2c(I2C_READ);
     return data;
 }
 
 uint8_t convert_temp(uint8_t data){
-    return (175.72 * data / 65536 - 46.85);
+    return (175.72 * data / MAX_COUNT - 46.85);
 }

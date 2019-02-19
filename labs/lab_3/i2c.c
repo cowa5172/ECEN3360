@@ -83,7 +83,7 @@ void reset_i2c(void){
 void start_i2c(bool RW){
     I2C0 -> CMD = I2C_CMD_START;
     I2C0 -> TXDATA = (SLAVE_ADDR << 1) | RW;
-    wait_i2c();
+    wait_ACK();
 }
 
 /*****************************************************************************/
@@ -155,7 +155,7 @@ void wait_RXDATAV(void){
 
 void write_i2c(uint8_t data){
     I2C0 -> TXDATA = data;
-    wait_i2c();
+    wait_ACK();
 }
 
 /*****************************************************************************/

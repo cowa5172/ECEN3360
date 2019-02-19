@@ -16,7 +16,7 @@
  *****************************************************************************/
 #define     LFXO_FREQ       32768u
 #define     ULFRCO_FREQ     1000u
-#define     MAX_COUNT       65535
+#define     MAX_COUNT       65536
 #define     LETIMER_PERIOD  4
 #define     LED_ON_TIME     0.4
 #define     LETIMER0_EM     3

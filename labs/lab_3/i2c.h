@@ -20,10 +20,6 @@
 #define SLAVE_ADDR    0x40   // address of the SI7021 peripheral
 #define I2C_WRITE     0      // write signal for the i2c
 #define I2C_READ      1      // read signal for the i2c
-#define WRITE_REG     0xE6   // address of the user write command register
-#define READ_REG      0xE7   // address of the user read command register
-#define BIT_RES_12    0x81   // specifies 12 bit resolution for the SI7021
-#define BIT_RES_14    0x00   // specifies 14 bit resolution for the SI7021
 
 
 /******************************************************************************
