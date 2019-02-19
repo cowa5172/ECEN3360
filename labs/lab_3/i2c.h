@@ -27,10 +27,10 @@
  *****************************************************************************/
 void i2c0_init(void);
 void reset_i2c(void);
-void start_i2c(bool RW);
+void start_i2c(bool);
 void stop_i2c(void);
 void wait_ACK(void);
 void wait_RXDATAV(void);
-void write_i2c(uint8_t data);
+void write_i2c(uint8_t);
 uint8_t read_i2c(void);
 void I2C0_IRQHandler(void);

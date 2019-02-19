@@ -1,10 +1,9 @@
 #include "em_letimer.h"
-#include "emu.h"
 
 /******************************************************************************
  * filename: letimer.h                                                        *
  *                                                                            *
- * purpose: contains function declarations and macros used in letimer.c       *
+ * purpose: Contains function declarations and macros used in letimer.c       *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -14,8 +13,8 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define     LFXO_FREQ       32768u
-#define     ULFRCO_FREQ     1000u
+#define     LFXO_TICKS      32768u
+#define     ULFRCO_TICKS    1000u
 #define     MAX_COUNT       65536
 #define     LETIMER_PERIOD  4
 #define     LED_ON_TIME     0.4
