@@ -48,7 +48,7 @@ void enable_LPM(void){
     GPIO_PinOutClear(SENSOR_EN_PORT, SENSOR_EN_PIN);
 
     /* Allowing low energy mode */
-    unblockSleepMode();
+    unblockSleepMode(EM2);
 }
 
 /*****************************************************************************/
@@ -78,8 +78,8 @@ void disable_LPM(void){
     reset_i2c();
 
     /* Enabling I2C interrupts */
-    I2C0 -> IFC = I2C0_IFC_ACK;
-    I2C0 -> IEN |= I2C0_IEN_ACK | I2C0_IEN_RXDATAV;
+    I2C0 -> IFC = I2C_IFC_ACK;
+    I2C0 -> IEN |= I2C_IEN_ACK | I2C_IEN_RXDATAV;
 }
 
 /*****************************************************************************/
@@ -101,7 +101,7 @@ uint8_t read_user_reg(void){
     start_i2c(I2C_WRITE);       // Starts I2C in write mode
     write_i2c(READ_REG);        // Specifies location of user read register
     start_i2c(I2C_READ);        // Restarts I2C in read mode
-    wait_RXDATAV(void);         // Waits for valid data in receive buffer
+    wait_RXDATAV();         // Waits for valid data in receive buffer
     uint8_t data = read_i2c();  // Reads receive buffer data into variable
     stop_i2c();                 // Stops I2C
     return data;
@@ -122,10 +122,18 @@ uint8_t read_user_reg(void){
  * data         uint8_t     temperature code from Si7021
  */
 
-uint8_t measure_temp(void){
+uint32_t measure_temp(void){
     start_i2c(I2C_WRITE);
     write_i2c(TEMP_REG);
     start_i2c(I2C_READ);
+    wait_RXDATAV();
+    uint16_t temp_data = read_i2c();
+    send_ACK();
+    uint32_t data = temp_data << 8;
+    temp_data = read_i2c();
+    send_ACK();
+    data = data | temp_data;
+    stop_i2c();
     return data;
 }
 
@@ -145,6 +153,7 @@ uint8_t measure_temp(void){
  * returns: Temperature in celsius
  */
 
-uint8_t convert_temp(uint8_t data){
-    return (175.72 * data / MAX_COUNT - 46.85);
+uint32_t convert_temp(uint32_t data){
+    data = 175.72 * data / MAX_COUNT - 46.85;
+    return data;
 }

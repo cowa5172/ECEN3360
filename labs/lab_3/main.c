@@ -7,6 +7,7 @@
 #include "letimer.h"
 #include "emu.h"
 #include "i2c.h"
+#include "si7021.h"
 
 /******************************************************************************
  * filename: main.c                                                           *
@@ -59,7 +60,6 @@ int main(void)
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        //enter_sleep();
-        temp_meas();
+        enter_sleep();
     }
 }

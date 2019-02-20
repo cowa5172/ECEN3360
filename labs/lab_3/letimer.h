@@ -17,7 +17,7 @@
 #define     ULFRCO_TICKS    1000u
 #define     MAX_COUNT       65536
 #define     LETIMER_PERIOD  4
-#define     LED_ON_TIME     0.4
+#define     LED_ON_TIME     0.1
 #define     LETIMER0_EM     3
 
 

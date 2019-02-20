@@ -128,7 +128,7 @@ void LETIMER0_IRQHandler(void){
         disable_LPM();
 
         /* Measuring temperature, converting to celsius */
-        uint8_t temp = measure_temp();
+        uint32_t temp = measure_temp();
         temp = convert_temp(temp);
 
         /* 

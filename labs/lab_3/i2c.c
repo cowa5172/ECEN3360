@@ -54,7 +54,7 @@ void i2c0_init(void){
  */
 
 void reset_i2c(void){
-    for (int i=0; i<9; i++){
+    for (int i = 0; i < 9; i++){
         GPIO_PinOutClear(I2C_SCL_PORT, I2C_SCL_PIN);
         GPIO_PinOutSet(I2C_SCL_PORT, I2C_SCL_PIN);
     }
@@ -100,7 +100,7 @@ void start_i2c(bool RW){
  */
 
 void stop_i2c(void){
-    I2C0 -> CMD = I2C_CMD_NACK;
+    send_NACK();
     I2C0 -> CMD = I2C_CMD_STOP;
 }
 
@@ -118,7 +118,7 @@ void stop_i2c(void){
 
 void wait_ACK(void){
     while(!(I2C0 -> IF & I2C_IF_ACK));
-    I2C0 -> IFC = I2C_IFC_ACK;
+    send_ACK();
 }
 
 /*****************************************************************************/
@@ -176,8 +176,15 @@ void write_i2c(uint8_t data){
 
 uint8_t read_i2c(void){
     uint8_t buf = I2C0 -> RXDATA;
-    I2C0 -> CMD = I2C_CMD_NACK;
     return buf;
+}
+
+void send_ACK(void){
+    I2C0 -> CMD = I2C_CMD_ACK;
+}
+
+void send_NACK(void){
+    I2C0 -> CMD = I2C_CMD_NACK;
 }
 
 /*****************************************************************************/
@@ -191,10 +198,11 @@ uint8_t read_i2c(void){
  *
  * returns: none
  */
-
+ /*
 void I2C0_IRQHandler(void){
     CORE_ATOMIC_IRQ_DISABLE();
     unsigned int int_flag = I2C0 -> IF;
     I2C0 -> IFC = int_flag;
     CORE_ATOMIC_IRQ_ENABLE();
 }
+*/

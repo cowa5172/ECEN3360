@@ -33,4 +33,6 @@ void wait_ACK(void);
 void wait_RXDATAV(void);
 void write_i2c(uint8_t);
 uint8_t read_i2c(void);
+void send_ACK(void);
+void send_NACK(void);
 void I2C0_IRQHandler(void);
