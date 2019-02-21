@@ -84,6 +84,7 @@ void start_i2c(bool RW){
     I2C0 -> CMD = I2C_CMD_START;
     I2C0 -> TXDATA = (SLAVE_ADDR << 1) | RW;
     wait_ACK();
+    send_ACK();
 }
 
 /*****************************************************************************/
@@ -107,39 +108,6 @@ void stop_i2c(void){
 /*****************************************************************************/
 
 /*
- * function name: wait_ACK
- *
- * description: Waits for an ACK interrupt signal to prevent miscommunication
- *
- * arguments: none
- *
- * returns: none
- */
-
-void wait_ACK(void){
-    while(!(I2C0 -> IF & I2C_IF_ACK));
-    send_ACK();
-}
-
-/*****************************************************************************/
-
-/*
- * function name: wait_RXDATAV
- *
- * description: Waits for a valid byte in RXDATA
- *
- * arguments: none
- *
- * returns: none
- */
-
-void wait_RXDATAV(void){
-    while(!(I2C0 -> IF & I2C_IF_RXDATAV));
-}
-
-/*****************************************************************************/
-
-/*
  * function name: write_i2c
  *
  * description: Loads a byte of data to the TX register to be sent to the
@@ -156,6 +124,7 @@ void wait_RXDATAV(void){
 void write_i2c(uint8_t data){
     I2C0 -> TXDATA = data;
     wait_ACK();
+    send_ACK();
 }
 
 /*****************************************************************************/
@@ -179,13 +148,6 @@ uint8_t read_i2c(void){
     return buf;
 }
 
-void send_ACK(void){
-    I2C0 -> CMD = I2C_CMD_ACK;
-}
-
-void send_NACK(void){
-    I2C0 -> CMD = I2C_CMD_NACK;
-}
 
 /*****************************************************************************/
 

@@ -19,7 +19,8 @@
 #define     LETIMER_PERIOD  4
 #define     LED_ON_TIME     0.1
 #define     LETIMER0_EM     3
-
+#define     LETIMER0_Interrupt_Clear()  (LETIMER0 -> IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1;)
+#define     LETIMER0_Interrupt_Enable() (LETIMER0 -> IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1;)
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *

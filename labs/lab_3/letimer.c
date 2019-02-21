@@ -85,10 +85,9 @@ void letimer0_init(void){
     LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // setting comp0 register
     LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // setting comp1 register
 
-
     /* Initialising interrupts on LETIMER COMP0 and COMP1 */
-    LETIMER0 -> IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1;
-    LETIMER0 -> IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1;
+    LETIMER0_Interrupt_Clear()
+    LETIMER0_Interrupt_Enable()
 
     NVIC_EnableIRQ(LETIMER0_IRQn);
 }

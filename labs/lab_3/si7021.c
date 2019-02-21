@@ -101,7 +101,7 @@ uint8_t read_user_reg(void){
     start_i2c(I2C_WRITE);       // Starts I2C in write mode
     write_i2c(READ_REG);        // Specifies location of user read register
     start_i2c(I2C_READ);        // Restarts I2C in read mode
-    wait_RXDATAV();         // Waits for valid data in receive buffer
+    wait_RXDATAV();             // Waits for valid data in receive buffer
     uint8_t data = read_i2c();  // Reads receive buffer data into variable
     stop_i2c();                 // Stops I2C
     return data;
