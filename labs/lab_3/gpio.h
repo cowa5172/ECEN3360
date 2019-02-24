@@ -42,4 +42,15 @@
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
+
+/*
+ * function name: gpio_init
+ *
+ * description: Initialises all of the GPIO to be used
+ * 
+ * arguments: none
+ * 
+ * returns: none
+ */
+
 void gpio_init(void);

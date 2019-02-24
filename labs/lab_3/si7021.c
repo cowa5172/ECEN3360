@@ -23,21 +23,27 @@
  *****************************************************************************/
 
 void LPM_Enable(void){
-    /* Disabling the SCL and SDA lines */
-    GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeDisabled, I2C_SCL_DEF);
-    GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeDisabled, I2C_SDA_DEF);
-    
-    /* Deasserting the sensor enable */
-    GPIO_PinOutClear(SENSOR_EN_PORT, SENSOR_EN_PIN);
-}
+    /* Blocking sleep mode */
+    EMU_Block(EM2);
 
-void LPM_Disable(void){
     /* Enabling the SCL and SDA lines to allow I2C communication */
     GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeWiredAnd, I2C_SCL_DEF);
     GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeWiredAnd, I2C_SDA_DEF);
     
     /* Resetting the I2C state machines on master and Si7021 */
     I2C0_Reset();
+}
+
+void LPM_Disable(void){
+    /* Disabling the SCL and SDA lines */
+    GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeDisabled, I2C_SCL_DEF);
+    GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeDisabled, I2C_SDA_DEF);
+    
+    /* Deasserting the sensor enable */
+    GPIO_PinOutClear(SENSOR_EN_PORT, SENSOR_EN_PIN);
+
+    /* Unblocking sleep mode */
+    EMU_Unblock(EM2);
 }
 
 uint8_t SI7021_Read_User_Reg(void){

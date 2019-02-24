@@ -15,16 +15,6 @@
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
-/*
- * function name: gpio_init
- *
- * description: Initialises all of the GPIO to be used
- * 
- * arguments: none
- * 
- * returns: none
- */
-
 void gpio_init(void){
     /* Set LED ports to be standard output drive with default off (cleared) */
     GPIO_DriveStrengthSet(LED0_PORT, gpioDriveStrengthWeakAlternateWeak);

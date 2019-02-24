@@ -28,6 +28,8 @@
 #define I2C0_FLAG_CLR   I2C0 -> IFC
 #define I2C0_TXBUF      I2C0 -> TXDATA
 #define I2C0_RXBUF      I2C0 -> RXDATA
+#define I2C0_ROUTELOC   I2C0 -> ROUTELOC0
+#define I2C0_ROUTEPEN   I2C0 -> ROUTEPEN
 
 // Macro function definitions
 #define I2C0_Is_Busy()      (I2C0 -> STATE & I2C_STATE_BUSY)

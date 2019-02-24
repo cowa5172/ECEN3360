@@ -16,7 +16,7 @@
 #define TEMP_REG       0xE3   // address of the measure temp hold master mode
 #define BIT_RES_12     0x81   // specifies 12 bit resolution for the SI7021
 #define BIT_RES_14     0x00   // specifies 14 bit resolution for the SI7021
-#define THRESHOLD_TEMP 26
+#define THRESHOLD_TEMP 25
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
@@ -25,11 +25,10 @@
 /*
  * function name: LPM_Enable
  *
- * description: Enables Low Power Management so that the Pearl Gecko operates
- *              in low energy when I2C communications are not occurring by:
- *              - disabling the SCL and SDA lines,
- *              - deasserting the sensor enable, and 
- *              - unblocking sleep mode
+ * description: Enables Load Power Management so that the I2C can function by
+ *              - blocking the energy mode to a minimum of EM1, 
+ *              - enabling the SCL and SDA lines to Wired And, and
+ *              - resetting the I2C state machines.
  *
  * arguments: none
  *
@@ -43,11 +42,12 @@ void LPM_Enable(void);
 /*
  * function name: LPM_Disable
  *
- * description: Disables Low Power Management so that the I2C can function by
- *              - blocking the energy mode to a minimum of EM1, 
- *              - enabling the SCL and SDA lines to Wired And, and
- *              - resetting the I2C state machines.
- *
+ * description: Disables Load Power Management so that the Pearl Gecko operates
+ *              in low energy when I2C communications are not occurring by:
+ *              - disabling the SCL and SDA lines,
+ *              - deasserting the sensor enable, and 
+ *              - unblocking sleep mode
+ * 
  * arguments: none
  *
  * returns: none

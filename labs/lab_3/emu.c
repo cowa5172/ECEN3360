@@ -32,76 +32,33 @@
 /******************************************************************************
  * GLOBAL VARIABLES                                                           *
  *****************************************************************************/
-volatile uint32_t lowest_energy_mode[MAX_EM_ELEMENTS];
+volatile uint32_t lowest_EM[MAX_EM_ELEMENTS];
 
 
 /******************************************************************************
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
-/*
- * function name: blockSleepMode
- *
- * description: Sets a limit on the minimum allowable energy mode that the
- *              Pearl Gecko can operate in
- * 
- * arguments:
- * argument     type        description
- * --------     ----        -----------
- * minimumMode  uint8_t     minimum mode the Pearl Gecko can operate in
- * 
- * returns: none
- */
-
-void blockSleepMode(uint8_t EM){
+void EMU_Block(uint8_t EM){
     CORE_ATOMIC_IRQ_DISABLE();
-    lowest_energy_mode[EM]++;
+    lowest_EM[EM]++;
     CORE_ATOMIC_IRQ_ENABLE();
 }
 
-/*****************************************************************************/
-
-/*
- * function name: unblockSleepMode
- *
- * description: Removes limit on the minimum allowable energy mode that the
- *              Pearl Gecko can operate in
- * 
- * arguments:
- * argument     type        description
- * --------     ----        -----------
- * minimumMode  uint8_t     minimum mode the Pearl Gecko can operate in
- * 
- * returns: none
- */
-
-void unblockSleepMode(uint8_t EM){
+void EMU_Unblock(uint8_t EM){
     CORE_ATOMIC_IRQ_DISABLE();
-    if (lowest_energy_mode[EM] > 0) lowest_energy_mode[EM]--;
+    if (lowest_EM[EM] > 0) lowest_EM[EM]--;
     CORE_ATOMIC_IRQ_ENABLE();
 }
 
-/*****************************************************************************/
-
-/*
- * function name: enter_sleep
- *
- * description: Puts the Pearl Gecko to sleep in the lowest energy mode
- *              allowed by the block and unblock functions
- * 
- * arguments: none
- * 
- * returns: none
- */
-
-void enter_sleep(void){
-    if (lowest_energy_mode[EM0] > 0){
+void EMU_Sleep(void){
+    if (lowest_EM[EM0] > 0){
         return;
-    } else if (lowest_energy_mode[EM1] > 0){
+    } else if (lowest_EM[EM1] > 0){
         return;
-    } else if (lowest_energy_mode[EM2] > 0){
+    } else if (lowest_EM[EM2] > 0){
         EMU_EnterEM1();
-    } else if (lowest_energy_mode[EM3] > 0){
+    } else if (lowest_EM[EM3] > 0){
         EMU_EnterEM2(true);
     } else {
         EMU_EnterEM3(true);

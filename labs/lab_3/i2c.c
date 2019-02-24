@@ -16,18 +16,17 @@
  *****************************************************************************/
 
 void i2c0_init(void){
-    /* Initialise I2C0 */
     I2C_Init_TypeDef i2c_init;
-    i2c_init.enable  = false;            // disable during initialisation
-    i2c_init.master  = true;             // set master mode
-    i2c_init.refFreq = 0;                // use current reference clock
-    i2c_init.freq    = SI7021_FREQ;      // set to SI7021 max frequency
-    i2c_init.clhr    = i2cClockHLRFast;  // set to use 4:4 low/high duty cycle
+    i2c_init.enable  = false;            // Disable during initialisation
+    i2c_init.master  = true;             // Set master mode
+    i2c_init.refFreq = 0;                // Use current reference clock
+    i2c_init.freq    = SI7021_FREQ;      // Set to SI7021 max frequency
+    i2c_init.clhr    = i2cClockHLRFast;  // Set to use 4:4 low/high duty cycle
     I2C_Init(I2C0, &i2c_init);
 
     /* Route SDA and SCL pins */
-    I2C0 -> ROUTELOC0 = I2C_ROUTELOC0_SCLLOC_LOC15 | I2C_ROUTELOC0_SDALOC_LOC15;
-    I2C0 -> ROUTEPEN  = I2C_ROUTEPEN_SCLPEN | I2C_ROUTEPEN_SDAPEN;
+    I2C0_ROUTELOC = I2C_ROUTELOC0_SCLLOC_LOC15 | I2C_ROUTELOC0_SDALOC_LOC15;
+    I2C0_ROUTEPEN = I2C_ROUTEPEN_SCLPEN | I2C_ROUTEPEN_SDAPEN;
 
     I2C0_Reset();
 }

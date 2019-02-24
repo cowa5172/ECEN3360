@@ -90,8 +90,8 @@ void LETIMER0_IRQHandler(void){
 
     /* Temperature read when timer reaches COMP1 */
     if (int_flag & LETIMER_IFC_COMP1){
-        /* Low power management disabled to allow I2C communication */
-        LPM_Disable();
+        /* Load power management disabled to allow I2C communication */
+        LPM_Enable();
 
         /* Measuring temperature */
         float temp = SI7021_Measure_Temp();
@@ -104,8 +104,8 @@ void LETIMER0_IRQHandler(void){
         if (temp < THRESHOLD_TEMP) GPIO_PinOutSet(LED0_PORT, LED0_PIN);
         else GPIO_PinOutClear(LED0_PORT, LED0_PIN);
 
-        /* Low power management reenabled to put I2C bus to sleep */
-        LPM_Enable();
+        /* Load power management reenabled to put I2C bus to sleep */
+        LPM_Disable();
     }
 
     /* Reenabling interrupts */
