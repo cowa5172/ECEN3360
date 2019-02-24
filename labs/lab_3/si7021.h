@@ -21,8 +21,88 @@
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
  *****************************************************************************/
-void enable_LPM(void);
-void disable_LPM(void);
-uint8_t read_user_reg(void);
-uint32_t measure_temp(void);
-uint32_t convert_temp(uint32_t);
+
+/*
+ * function name: LPM_Enable
+ *
+ * description: Enables Low Power Management so that the Pearl Gecko operates
+ *              in low energy when I2C communications are not occurring by:
+ *              - disabling the SCL and SDA lines,
+ *              - deasserting the sensor enable, and 
+ *              - unblocking sleep mode
+ *
+ * arguments: none
+ *
+ * returns: none
+ */
+
+void LPM_Enable(void);
+
+/*****************************************************************************/
+
+/*
+ * function name: LPM_Disable
+ *
+ * description: Disables Low Power Management so that the I2C can function by
+ *              - blocking the energy mode to a minimum of EM1, 
+ *              - enabling the SCL and SDA lines to Wired And, and
+ *              - resetting the I2C state machines.
+ *
+ * arguments: none
+ *
+ * returns: none
+ */
+
+void LPM_Disable(void);
+
+/*****************************************************************************/
+
+/*
+ * function name: SI7021_Read_User_Reg
+ *
+ * description: Protocol to read User Register 1 on the Si7021
+ *
+ * arguments: none
+ *
+ * returns:
+ * return       type        description
+ * --------     ----        -----------
+ * data         uint8_t     user register 1 data
+ */
+
+uint8_t SI7021_Read_User_Reg(void);
+
+/*****************************************************************************/
+
+/*
+ * function name: SI7021_Measure_Temp
+ *
+ * description: Protocol to measure temperature from the Si7021
+ *
+ * arguments: none
+ *
+ * returns:
+ * return       type        description
+ * --------     ----        -----------
+ * data         float       temperature code from Si7021
+ */
+
+float SI7021_Measure_Temp(void);
+
+/*****************************************************************************/
+
+/*
+ * function name: convert_temp
+ *
+ * description: Converts temperature code received from the Si7021 into a
+ *              Celsius temperature value
+ *
+ * arguments:
+ * argument     type        description
+ * --------     ----        -----------
+ * data         uint16_t    temperature code from Si7021
+ * 
+ * returns: Temperature in celsius (float)
+ */
+
+float convert_temp(uint16_t);

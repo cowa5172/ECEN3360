@@ -7,7 +7,6 @@
 #include "letimer.h"
 #include "emu.h"
 #include "i2c.h"
-#include "si7021.h"
 
 /******************************************************************************
  * filename: main.c                                                           *
@@ -20,8 +19,9 @@
  * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
-int main(void)
-{
+int main(void){
+    blockSleepMode(EM3);
+    
     EMU_DCDCInit_TypeDef dcdcInit = EMU_DCDCINIT_DEFAULT;
     CMU_HFXOInit_TypeDef hfxoInit = CMU_HFXOINIT_DEFAULT;
 

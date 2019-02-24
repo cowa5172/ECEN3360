@@ -22,138 +22,58 @@
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
-/*
- * function name: enable_LPM
- *
- * description: Enables Low Power Management so that the Pearl Gecko operates
- *              in low energy when I2C communications are not occurring by:
- *              - disabling the SCL and SDA lines,
- *              - deasserting the sensor enable, and 
- *              - unblocking sleep mode
- *
- * arguments: none
- *
- * returns: none
- */
-
-void enable_LPM(void){
-    /* Disabling relevant I2C interrupts */
-    I2C0 -> IEN &= !(I2C_IEN_ACK | I2C_IEN_RXDATAV);
-
+void LPM_Enable(void){
     /* Disabling the SCL and SDA lines */
     GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeDisabled, I2C_SCL_DEF);
     GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeDisabled, I2C_SDA_DEF);
     
     /* Deasserting the sensor enable */
     GPIO_PinOutClear(SENSOR_EN_PORT, SENSOR_EN_PIN);
-
-    /* Allowing low energy mode */
-    unblockSleepMode(EM2);
 }
 
-/*****************************************************************************/
-
-/*
- * function name: disable_LPM
- *
- * description: Disables Low Power Management so that the I2C can function by
- *              - blocking the energy mode to a minimum of EM1, 
- *              - enabling the SCL and SDA lines to Wired And, and
- *              - resetting the I2C state machines.
- *
- * arguments: none
- *
- * returns: none
- */
-
-void disable_LPM(void){
-    /* Preventing I2C from falling below EM1 */
-    blockSleepMode(EM2);
-
+void LPM_Disable(void){
     /* Enabling the SCL and SDA lines to allow I2C communication */
     GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeWiredAnd, I2C_SCL_DEF);
     GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeWiredAnd, I2C_SDA_DEF);
     
     /* Resetting the I2C state machines on master and Si7021 */
-    reset_i2c();
-
-    /* Enabling I2C interrupts */
-    I2C0 -> IFC = I2C_IFC_ACK;
-    I2C0 -> IEN |= I2C_IEN_ACK | I2C_IEN_RXDATAV;
+    I2C0_Reset();
 }
 
-/*****************************************************************************/
-
-/*
- * function name: read_user_reg
- *
- * description: Protocol to read User Register 1 on the Si7021
- *
- * arguments: none
- *
- * returns:
- * return       type        description
- * --------     ----        -----------
- * data         uint8_t     user register 1 data
- */
-
-uint8_t read_user_reg(void){
-    start_i2c(I2C_WRITE);       // Starts I2C in write mode
-    write_i2c(READ_REG);        // Specifies location of user read register
-    start_i2c(I2C_READ);        // Restarts I2C in read mode
-    wait_RXDATAV();             // Waits for valid data in receive buffer
-    uint8_t data = read_i2c();  // Reads receive buffer data into variable
-    stop_i2c();                 // Stops I2C
+uint8_t SI7021_Read_User_Reg(void){
+    I2C0_Start(I2C_WRITE);       // Starts I2C in write mode
+    I2C0_Write(READ_REG);        // Specifies location of user read register
+    I2C0_Start(I2C_READ);        // Restarts I2C in read mode
+    uint8_t data = I2C0_Read();  // Reads receive buffer data into variable
+    I2C0_Stop();
     return data;
 }
 
-/*****************************************************************************/
+float SI7021_Measure_Temp(void){
+	I2C0_Send_Abort();
+	I2C0_CMD = I2C_CMD_CLEARPC;
 
-/*
- * function name: measure_temp
- *
- * description: Protocol to measure temperature from the Si7021
- *
- * arguments: none
- *
- * returns:
- * return       type        description
- * --------     ----        -----------
- * data         uint8_t     temperature code from Si7021
- */
+    /* Address temperature read register */
+    I2C0_Start(I2C_WRITE);
+    I2C0_Write(TEMP_REG);
 
-uint32_t measure_temp(void){
-    start_i2c(I2C_WRITE);
-    write_i2c(TEMP_REG);
-    start_i2c(I2C_READ);
-    wait_RXDATAV();
-    uint16_t temp_data = read_i2c();
-    send_ACK();
-    uint32_t data = temp_data << 8;
-    temp_data = read_i2c();
-    send_ACK();
-    data = data | temp_data;
-    stop_i2c();
-    return data;
+    /* Read 16 bit temperature data */
+    I2C0_Start(I2C_READ);
+    uint8_t data = I2C0_Read();
+    uint16_t temp_code = data << 8;
+    I2C0_Send_ACK();
+    data = I2C0_Read();
+    temp_code = temp_code | data;
+
+    /* Stop I2C */
+    I2C0_Stop();
+
+    /* Convert temperature to Celsius */
+    float temp = convert_temp(temp_code);
+
+    return temp;
 }
 
-/*****************************************************************************/
-
-/*
- * function name: convert_temp
- *
- * description: Converts temperature code received from the Si7021 into a
- *              Celsius temperature value
- *
- * arguments:
- * argument     type        description
- * --------     ----        -----------
- * data         uint8_t     temperature code from Si7021
- * 
- * returns: Temperature in celsius
- */
-
-uint32_t convert_temp(uint32_t data){
-    data = 175.72 * data / MAX_COUNT - 46.85;
-    return data;
+float convert_temp(uint16_t data){
+    return (175.72 * data / MAX_COUNT - 46.85);
 }

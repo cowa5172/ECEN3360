@@ -32,7 +32,7 @@
 /******************************************************************************
  * GLOBAL VARIABLES                                                           *
  *****************************************************************************/
-volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
+volatile uint32_t lowest_energy_mode[MAX_EM_ELEMENTS];
 
 
 /******************************************************************************
@@ -53,9 +53,9 @@ volatile uint32_t sleep_block_counter[MAX_EM_ELEMENTS];
  * returns: none
  */
 
-void blockSleepMode(uint8_t minimumMode){
+void blockSleepMode(uint8_t EM){
     CORE_ATOMIC_IRQ_DISABLE();
-    sleep_block_counter[minimumMode]++;
+    lowest_energy_mode[EM]++;
     CORE_ATOMIC_IRQ_ENABLE();
 }
 
@@ -75,11 +75,9 @@ void blockSleepMode(uint8_t minimumMode){
  * returns: none
  */
 
-void unblockSleepMode(uint8_t minimumMode){
+void unblockSleepMode(uint8_t EM){
     CORE_ATOMIC_IRQ_DISABLE();
-    if (sleep_block_counter[minimumMode] > 0){
-        sleep_block_counter[minimumMode]--;
-    }
+    if (lowest_energy_mode[EM] > 0) lowest_energy_mode[EM]--;
     CORE_ATOMIC_IRQ_ENABLE();
 }
 
@@ -97,13 +95,13 @@ void unblockSleepMode(uint8_t minimumMode){
  */
 
 void enter_sleep(void){
-    if (sleep_block_counter[EM0] > 0){
+    if (lowest_energy_mode[EM0] > 0){
         return;
-    } else if (sleep_block_counter[EM1] > 0){
+    } else if (lowest_energy_mode[EM1] > 0){
         return;
-    } else if (sleep_block_counter[EM2] > 0){
+    } else if (lowest_energy_mode[EM2] > 0){
         EMU_EnterEM1();
-    } else if (sleep_block_counter[EM3] > 0){
+    } else if (lowest_energy_mode[EM3] > 0){
         EMU_EnterEM2(true);
     } else {
         EMU_EnterEM3(true);
