@@ -3,6 +3,8 @@
 #include "gpio.h"
 #include "cmu.h"
 #include "emu.h"
+#include "i2c.h"
+#include "si7021.h"
 
 /******************************************************************************
  * filename: letimer.c                                                        *
@@ -19,42 +21,33 @@
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
-/*
- * function name: letimer0_init
- *
- * description: Initialises the LETIMER0 by setting the COMP0 and COMP1
- *              registers, adjusting the prescaler, enabling repeat free mode,
- *              disabling underflow, and enabling interrupts
- *
- * arguments: none
- *
- * returns: none
- */
-
 void letimer0_init(void){
-    unsigned int    seconds_ticks, on_ticks;
-    unsigned int    letimer0_tick_seconds;
-    unsigned int    pres_cal, effective_pres_cal;
+    unsigned int    period_ticks, on_ticks;
+    unsigned int    letimer_freq;
+    unsigned int    prescaler, eff_prescaler;
   
-    if (LETIMER0_EM == 4) letimer0_tick_seconds = ULFRCO_FREQ;
-    else letimer0_tick_seconds = LFXO_FREQ;
+    /* Determining the frequency to use based on energy mode */
+    if (LETIMER0_EM == EM4) letimer_freq = ULFRCO_TICKS;
+    else letimer_freq = LFXO_TICKS;
 
-    // second ticks required before prescaling
-    seconds_ticks = LETIMER_PERIOD * letimer0_tick_seconds - 1;	// minus 1 due to count starts from 0 and not 1
+    /* Calculating the number of ticks in the period of the LETIMER; 
+       minus 1 component accounts for 0 start indexing in C */
+    period_ticks = LETIMER_PERIOD * letimer_freq - 1;
 
-    pres_cal = 0;
-    effective_pres_cal = 1;
-    while ((seconds_ticks / MAX_COUNT) > 0){
-        pres_cal++;
-        letimer0_tick_seconds = letimer0_tick_seconds >> 1;
-        seconds_ticks = LETIMER_PERIOD * letimer0_tick_seconds - 1;	// minus 1 due to count starts from 0 and not 1
-        effective_pres_cal = effective_pres_cal << 1;
+    /* Calculating and setting the prescaler and adjusting period_ticks */
+    prescaler = 0;
+    eff_prescaler = 1;
+    while ((period_ticks / MAX_COUNT) > 0){
+        prescaler++;
+        letimer_freq = letimer_freq >> 1;
+        period_ticks = LETIMER_PERIOD * letimer_freq - 1;
+        eff_prescaler = eff_prescaler << 1;
     }
 
-    on_ticks = seconds_ticks - (LED_ON_TIME * letimer0_tick_seconds) / 1000;  //Adjust for milli-seconds
+    /* Calculating the number of ticks the timer signal is "on" */
+    on_ticks = period_ticks - (LED_ON_TIME * letimer_freq);
 
-    if (effective_pres_cal > 1) CMU_ClockPrescSet(cmuClock_LETIMER0, effective_pres_cal);
-
+    if (eff_prescaler > 1) CMU_ClockPrescSet(cmuClock_LETIMER0, eff_prescaler);
 
     /* Initialising LETIMER0 */
     LETIMER_Init_TypeDef letimer_init;
@@ -62,51 +55,59 @@ void letimer0_init(void){
     letimer_init.bufTop   = false;
     letimer_init.comp0Top = true;
     letimer_init.debugRun = false;
-    letimer_init.enable   = false;					// disabling during init
+    letimer_init.enable   = false;                  // disabling during init
     letimer_init.out0Pol  = 0;
     letimer_init.out1Pol  = 0;
-    letimer_init.repMode  = letimerRepeatFree; 	// setting repeat free mode
-    letimer_init.topValue = 0;
-    letimer_init.ufoa0    = letimerUFOANone;		// disabling underflow
-    letimer_init.ufoa1    = letimerUFOANone;		// disabling underflow
+    letimer_init.repMode  = letimerRepeatFree;      // setting repeat free mode
+    letimer_init.ufoa0    = letimerUFOANone;        // disabling underflow
+    letimer_init.ufoa1    = letimerUFOANone;        // disabling underflow
 
-    LETIMER_Init(LETIMER0, &letimer_init);			// Initialising
+    LETIMER_Init(LETIMER0, &letimer_init);          // Initialising
 
-    LETIMER_CompareSet(LETIMER0, 0, on_ticks);		// setting comp0 register
-    LETIMER_CompareSet(LETIMER0, 1, seconds_ticks);	// setting comp1 register
-
+    /* Setting time compare values */
+    LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // setting comp0 register
+    LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // setting comp1 register
 
     /* Initialising interrupts on LETIMER COMP0 and COMP1 */
-    LETIMER0 -> IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1;
-    LETIMER0 -> IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1;
+    LETIMER_Interrupt_Clear();
+    LETIMER_Interrupt_Enable();
 
-    NVIC_EnableIRQ(LETIMER0_IRQn);				// enabling nested interrupts
+    blockSleepMode(LETIMER0_EM);
+
+    NVIC_EnableIRQ(LETIMER0_IRQn);
 }
 
-/*****************************************************************************/
-
-/*
- * function name: LETIMER0_IRQHandler
- *
- * description: The interrupt handler for the LETIMER0. Called when either
- *              COMP0 or COMP1 is reached in the timer and is used to turn on
- *              and off LED0 periodically.
- *
- * arguments: none
- *
- * returns: none
- */
-
 void LETIMER0_IRQHandler(void){
-    /* Grabbing flag source and clearing flags */
     unsigned int int_flag;
 
+    /* Disabling other interrupts, grabbing flag source and clearing flags */
     CORE_ATOMIC_IRQ_DISABLE();
-    int_flag = LETIMER0 -> IF;
-    LETIMER0 -> IFC = int_flag;
+    int_flag = LETIMER0_FLAG;
+    LETIMER0_FLAG_CLR = int_flag;
 
-    /* LED0 set when counter = COMP0, cleared when counter = COMP1 */
-    if (int_flag & LETIMER_IF_COMP0){ GPIO_PinOutSet(LED0_PORT, LED0_PIN); }
-    if (int_flag & LETIMER_IF_COMP1){ GPIO_PinOutClear(LED0_PORT, LED0_PIN); }
+    /* Sensor enabled when timer reaches COMP0 */
+    if (int_flag & LETIMER_IFC_COMP0) GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
+
+    /* Temperature read when timer reaches COMP1 */
+    if (int_flag & LETIMER_IFC_COMP1){
+        /* Load power management disabled to allow I2C communication */
+        LPM_Enable();
+
+        /* Measuring temperature */
+        float temp = SI7021_Measure_Temp();
+
+        /* 
+         * LED0 is set if temperature drops beneath a certain threshold,
+         * cleared otherwise 
+         */
+
+        if (temp < THRESHOLD_TEMP) GPIO_PinOutSet(LED0_PORT, LED0_PIN);
+        else GPIO_PinOutClear(LED0_PORT, LED0_PIN);
+
+        /* Load power management reenabled to put I2C bus to sleep */
+        LPM_Disable();
+    }
+
+    /* Reenabling interrupts */
     CORE_ATOMIC_IRQ_ENABLE();
 }

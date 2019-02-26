@@ -18,17 +18,6 @@
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
 
-/*
- * function name: cmu_init
- *
- * description: Configures the clock tree, selects the clocks to be used, and 
- *              initialises the clocks
- * 
- * arguments: none
- * 
- * returns: none
- */
-
 void cmu_init(void){
     CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
     CMU_ClockEnable(cmuClock_HFPER, true);

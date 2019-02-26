@@ -19,8 +19,9 @@
  * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
-int main(void)
-{
+int main(void){
+    blockSleepMode(EM3);
+    
     EMU_DCDCInit_TypeDef dcdcInit = EMU_DCDCINIT_DEFAULT;
     CMU_HFXOInit_TypeDef hfxoInit = CMU_HFXOINIT_DEFAULT;
 
@@ -55,14 +56,10 @@ int main(void)
     LETIMER_Enable(LETIMER0, true);
     I2C_Enable(I2C0, true);
 
-    /* Determines minimum sleep mode */
-    blockSleepMode(LETIMER0_EM);
-
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
         enter_sleep();
-        temp_meas();
     }
 }
