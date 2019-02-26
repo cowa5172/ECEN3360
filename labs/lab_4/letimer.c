@@ -72,7 +72,7 @@ void letimer0_init(void){
     LETIMER_Interrupt_Clear();
     LETIMER_Interrupt_Enable();
 
-    blockSleepMode(LETIMER0_EM);
+    EMU_Block(LETIMER0_EM);
 
     NVIC_EnableIRQ(LETIMER0_IRQn);
 }

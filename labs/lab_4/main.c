@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 int main(void){
-    blockSleepMode(EM3);
+    EMU_Block(EM3);
     
     EMU_DCDCInit_TypeDef dcdcInit = EMU_DCDCINIT_DEFAULT;
     CMU_HFXOInit_TypeDef hfxoInit = CMU_HFXOINIT_DEFAULT;
@@ -60,6 +60,6 @@ int main(void){
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        enter_sleep();
+        EMU_Sleep();
     }
 }

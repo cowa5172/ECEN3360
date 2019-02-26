@@ -24,7 +24,7 @@
 
 void LPM_Enable(void){
     /* Blocking sleep mode */
-    EMU_Block(EM2);
+    //EMU_Block(EM2);
 
     /* Enabling the SCL and SDA lines to allow I2C communication */
     GPIO_PinModeSet(I2C_SCL_PORT, I2C_SCL_PIN, gpioModeWiredAnd, I2C_SCL_DEF);
@@ -43,7 +43,7 @@ void LPM_Disable(void){
     GPIO_PinOutClear(SENSOR_EN_PORT, SENSOR_EN_PIN);
 
     /* Unblocking sleep mode */
-    EMU_Unblock(EM2);
+    //EMU_Unblock(EM2);
 }
 
 uint8_t SI7021_Read_User_Reg(void){
