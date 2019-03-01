@@ -2,6 +2,8 @@
 #include "leuart.h"
 #include "gpio.h"
 #include "em_core.h"
+#include <string.h>
+
 /*
  * leuart.c
  *
@@ -9,8 +11,11 @@
  *      Author: Dylan
  */
 
-static uint8_t write_count = 0;
-static char AT[] = "AT+NAMEdyoh";
+static uint8_t write_count1 = 0;
+static uint8_t write_count2 = 0;
+static const char AT[] = "AT+NAMEdyoh";
+uint8_t max_count = strlen(AT);
+char RX_data[11];
 
 void leuart0_init(void){
 	LEUART_Init_TypeDef leuart_init;
@@ -32,13 +37,15 @@ void leuart0_init(void){
 }
 
 void LEUART0_Write(void){
-	if (write_count < 11){
-		LEUART_Tx(LEUART0, AT[write_count++]);
+	if (write_count1 < max_count){
+		LEUART_Tx(LEUART0, AT[write_count1++]);
 	}
 }
 
 uint8_t LEUART0_Read(void){
-	return LEUART0_RX;
+	uint8_t temp = LEUART0_RX;
+	RX_data[write_count2++] = temp;
+	return temp;
 }
 
 void LEUART0_IRQHandler(void){
@@ -52,6 +59,7 @@ void LEUART0_IRQHandler(void){
 		LEUART0_TXBL_Disable();
 	}
 	if (int_flag & LEUART_IF_RXDATAV){
+		LEUART0_RX_Enable();
 		event |= UART_RXDV_MASK;
 		LEUART0_RXDATAV_Disable();
 	}
