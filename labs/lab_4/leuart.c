@@ -16,6 +16,7 @@ static uint8_t write_count2 = 0;
 static const char AT[] = "AT+NAMEdyoh";
 uint8_t max_count = strlen(AT);
 char RX_data[11];
+char TX_data[11];
 
 void leuart0_init(void){
 	LEUART_Init_TypeDef leuart_init;
@@ -38,6 +39,7 @@ void leuart0_init(void){
 
 void LEUART0_Write(void){
 	if (write_count1 < max_count){
+        TX_data[write_count1] = AT[write_count1];
 		LEUART_Tx(LEUART0, AT[write_count1++]);
 	}
 }
@@ -54,14 +56,16 @@ void LEUART0_IRQHandler(void){
 	LEUART0_FLAG_CLR = int_flag;
 
 	if (int_flag & LEUART_IF_TXBL){
-		LEUART0_TX_Enable();
-		event |= TXBL_MASK;
-		LEUART0_TXBL_Disable();
+		if (LEUART0_INT_EN & LEUART_IEN_TXBL){
+			event |= TXBL_MASK;         // Set event in scheduler
+			LEUART0_TXBL_Disable();     // Disable TX interrupt
+		}
 	}
 	if (int_flag & LEUART_IF_RXDATAV){
-		LEUART0_RX_Enable();
-		event |= UART_RXDV_MASK;
-		LEUART0_RXDATAV_Disable();
+		if (LEUART0_INT_EN & LEUART_IEN_RXDATAV){
+			event |= UART_RXDV_MASK;    // Set event in scheduler
+			LEUART0_RXDATAV_Disable();  // Disable RX interrupt
+		}
 	}
 
 	CORE_ATOMIC_IRQ_ENABLE();

@@ -8,6 +8,7 @@
 #include "emu.h"
 #include "i2c.h"
 #include "leuart.h"
+#include "si7021.h"
 
 /******************************************************************************
  * filename: main.c                                                           *
@@ -65,14 +66,14 @@ int main(void){
 //    I2C_Enable(I2C0, true);
 
     /* Enable LEUART0 */
-    LEUART_Enable(LEUART0, true);
+    LEUART_Enable(LEUART0, leuartEnable);
 
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
 
     bool UART_EN = false;
 
-//    while(LEUART0 -> SYNCBUSY);
+    while(LEUART0 -> SYNCBUSY);
     while (1) {
     	if (UART_EN == false){
     		UART_EN = true;
@@ -81,11 +82,19 @@ int main(void){
     	}
         if (event == 0) EMU_Sleep();
         if (event & COMP0_MASK){
-
+        	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
             event &= ~COMP0_MASK;
+            LETIMER0_COMP0_Enable();
         }
         if (event & COMP1_MASK){
-
+            LPM_Enable();
+            float temp = SI7021_Measure_Temp();
+            if (temp < THRESHOLD_TEMP)
+            	GPIO_PinOutSet(LED0_PORT, LED0_PIN);
+            else
+            	GPIO_PinOutClear(LED0_PORT, LED0_PIN);
+            LPM_Disable();
+            LETIMER0_COMP1_Enable();
             event &= ~COMP1_MASK;
         }
         if (event & ACK_MASK){
@@ -105,14 +114,14 @@ int main(void){
         	event &= ~TXC_MASK;
         }
         if (event & TXBL_MASK){
-            LEUART0_Write();
-        	event &= ~TXBL_MASK;
-            LEUART0_TXBL_Enable();
+            LEUART0_Write();                // If TX buffer full, write
+        	event &= ~TXBL_MASK;            // Remove event from scheduler
+            LEUART0_TXBL_Enable();          // Enable TX interrupts
         }
         if (event & UART_RXDV_MASK){
-            uint8_t data = LEUART0_Read();
-        	event &= ~UART_RXDV_MASK;
-        	LEUART0_RXDATAV_Enable();
+            uint8_t data = LEUART0_Read();  // If RX buffer full, read
+        	event &= ~UART_RXDV_MASK;       // Remove event from scheduler
+        	LEUART0_RXDATAV_Enable();       // Enable RX interrupts
         }
     }
 }

@@ -26,6 +26,10 @@
 
 #define LETIMER_Interrupt_Clear()  (LETIMER0_FLAG_CLR = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1)
 #define LETIMER_Interrupt_Enable() (LETIMER0_INT_EN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1)
+#define LETIMER0_COMP0_Enable()    (LETIMER0_INT_EN |= LETIMER_IEN_COMP0)
+#define LETIMER0_COMP0_Disable()   (LETIMER0_INT_EN &= ~LETIMER_IEN_COMP0)
+#define LETIMER0_COMP1_Enable()    (LETIMER0_INT_EN |= LETIMER_IEN_COMP1)
+#define LETIMER0_COMP1_Disable()   (LETIMER0_INT_EN &= ~LETIMER_IEN_COMP1)
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *

@@ -16,7 +16,7 @@
 #define TEMP_REG       0xE3   // address of the measure temp hold master mode
 #define BIT_RES_12     0x81   // specifies 12 bit resolution for the SI7021
 #define BIT_RES_14     0x00   // specifies 14 bit resolution for the SI7021
-#define THRESHOLD_TEMP 25
+#define THRESHOLD_TEMP 18
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
