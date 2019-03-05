@@ -36,13 +36,14 @@ void cmu_init(void){
         CMU_OscillatorEnable(cmuOsc_ULFRCO, true, true);
         CMU_OscillatorEnable(cmuOsc_LFXO, false, false);		// Disable LFXO
         CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_ULFRCO);	// Use ULFRCO in EM3 for LETIMER0
+        CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_ULFRCO);
     }
     else {
         CMU_OscillatorEnable(cmuOsc_ULFRCO, false, false);
         CMU_OscillatorEnable(cmuOsc_LFXO, true, true);		// Disable LFXO
         CMU_ClockSelectSet(cmuClock_LFA, cmuSelect_LFXO);	// routing clock to LFA
+        CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_LFXO);
     }
-    CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_LFXO);
 
     CMU_ClockEnable(cmuClock_HFPER, true);
     CMU_ClockEnable(cmuClock_CORELE, true);

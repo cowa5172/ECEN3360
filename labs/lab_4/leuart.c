@@ -17,6 +17,8 @@ static const char AT[] = "AT+NAMEdyoh";
 uint8_t max_count = strlen(AT);
 char RX_data[11];
 char TX_data[11];
+volatile bool stop_TX = false;
+volatile bool stop_RX = false;
 
 void leuart0_init(void){
 	LEUART_Init_TypeDef leuart_init;
@@ -41,12 +43,14 @@ void LEUART0_Write(void){
 	if (write_count1 < max_count){
         TX_data[write_count1] = AT[write_count1];
 		LEUART_Tx(LEUART0, AT[write_count1++]);
+		if (write_count1 == 11) stop_TX = true;
 	}
 }
 
 uint8_t LEUART0_Read(void){
 	uint8_t temp = LEUART0_RX;
 	RX_data[write_count2++] = temp;
+	if (write_count2 == 11) stop_RX = true;
 	return temp;
 }
 

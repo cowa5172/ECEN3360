@@ -9,6 +9,9 @@
 #ifndef SRC_LEUART_H_
 #define SRC_LEUART_H_
 
+extern volatile bool stop_RX;
+extern volatile bool stop_TX;
+
 #define LEUART0_CMD        LEUART0 -> CMD
 #define LEUART0_CTRL       LEUART0 -> CTRL
 #define LEUART0_INT_EN     LEUART0 -> IEN
@@ -20,8 +23,8 @@
 #define LEUART0_ROUTEPEN   LEUART0 -> ROUTEPEN
 
 #define LEUART0_Loopback_Enable() (LEUART0_CTRL |= LEUART_CTRL_LOOPBK)
-#define LEUART0_TX_Enable()		  (LEUART0_CMD |= LEUART_CMD_TXEN)
-#define LEUART0_RX_Enable()       (LEUART0_CMD |= LEUART_CMD_RXEN)
+#define LEUART0_TX_Disable()      (LEUART0_CMD &= ~LEUART_CMD_TXEN)
+#define LEUART0_RX_Disable()      (LEUART0_CMD &= ~LEUART_CMD_RXEN)
 #define LEUART0_TXBL_Enable()     (LEUART0_INT_EN |= LEUART_IEN_TXBL)
 #define LEUART0_TXBL_Disable()    (LEUART0_INT_EN &= ~LEUART_IEN_TXBL)
 #define LEUART0_RXDATAV_Enable()  (LEUART0_INT_EN |= LEUART_IEN_RXDATAV)

@@ -51,19 +51,19 @@ int main(void){
     gpio_init();
 
     /* Initialise LETIMER0 */
-//    letimer0_init();
+    letimer0_init();
 
     /* Initialise I2C0 */
-//    i2c0_init();
+    i2c0_init();
 
     /* Initialise LEUART0 */
     leuart0_init();
 
     /* Enable LETIMER0 */
-//    LETIMER_Enable(LETIMER0, true);
+    LETIMER_Enable(LETIMER0, true);
 
     /* Enable I2C0 */
-//    I2C_Enable(I2C0, true);
+    I2C_Enable(I2C0, true);
 
     /* Enable LEUART0 */
     LEUART_Enable(LEUART0, leuartEnable);
@@ -80,7 +80,9 @@ int main(void){
     		LEUART0_TXBL_Enable();
     		LEUART0_RXDATAV_Enable();
     	}
-        if (event == 0) EMU_Sleep();
+        if (event == 0){
+        	EMU_Sleep();
+        }
         if (event & COMP0_MASK){
         	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
             event &= ~COMP0_MASK;
@@ -114,14 +116,22 @@ int main(void){
         	event &= ~TXC_MASK;
         }
         if (event & TXBL_MASK){
-            LEUART0_Write();                // If TX buffer full, write
         	event &= ~TXBL_MASK;            // Remove event from scheduler
-            LEUART0_TXBL_Enable();          // Enable TX interrupts
+            LEUART0_Write();                // If TX buffer full, write
+            if (stop_TX){
+            	LEUART0_TX_Disable();
+            } else{
+            	LEUART0_TXBL_Enable();      // Enable TX interrupts
+            }
         }
         if (event & UART_RXDV_MASK){
-            uint8_t data = LEUART0_Read();  // If RX buffer full, read
         	event &= ~UART_RXDV_MASK;       // Remove event from scheduler
-        	LEUART0_RXDATAV_Enable();       // Enable RX interrupts
+            uint8_t data = LEUART0_Read();  // If RX buffer full, read
+            if (stop_RX){
+            	LEUART0_RX_Disable();
+            } else{
+            	LEUART0_RXDATAV_Enable();      // Enable TX interrupts
+            }
         }
     }
 }
