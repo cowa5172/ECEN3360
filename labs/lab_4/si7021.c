@@ -18,6 +18,8 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
+char ascii[7];
+
 /******************************************************************************
  * FUNCTION DEFINITIONS                                                       *
  *****************************************************************************/
@@ -55,7 +57,7 @@ uint8_t SI7021_Read_User_Reg(void){
     return data;
 }
 
-float SI7021_Measure_Temp(void){
+void SI7021_Measure_Temp(void){
 	I2C0_Send_Abort();
 	I2C0_CMD = I2C_CMD_CLEARPC;
 
@@ -76,10 +78,43 @@ float SI7021_Measure_Temp(void){
 
     /* Convert temperature to Celsius */
     float temp = convert_temp(temp_code);
-
-    return temp;
+    temp_to_ASCII(temp);
 }
 
 float convert_temp(uint16_t data){
     return (175.72 * data / MAX_COUNT - 46.85);
+}
+
+void temp_to_ASCII(float temp){
+	int temp_int = temp * 10;
+	int working;
+	int i = 0;
+	int place = 1;
+	int zeros = 3;
+
+	if (temp < 0){
+		ascii[i++] = '-';
+		temp_int = temp_int * (-1);
+	}
+	else ascii[i++] = '+';
+
+	while ((place * 10) < temp_int){
+		place = place * 10;
+		zeros--;
+	}
+
+	for (int j = zeros; j > 0; j--){
+		ascii[i++] = ' ';
+	}
+
+	while (temp_int > 0){
+		working = temp_int / place;
+		working += 0x30;
+		ascii[i++] = working;
+		if (place == 10) ascii[i++] = '.';
+		temp_int = temp_int % place;
+		if (place == 10 && temp_int == 0) ascii[i++] = '0';
+		place = place / 10;
+	}
+	ascii[i++] = 'C';
 }

@@ -5,6 +5,7 @@
 #include "emu.h"
 #include "i2c.h"
 #include "si7021.h"
+#include "leuart.h"
 
 /******************************************************************************
  * filename: letimer.c                                                        *
@@ -88,13 +89,11 @@ void LETIMER0_IRQHandler(void){
     /* Sensor enabled when timer reaches COMP0 */
     if (int_flag & LETIMER_IFC_COMP0){
     	event |= COMP0_MASK;
-    	LETIMER0_COMP0_Disable();
     }
 
     /* Temperature read when timer reaches COMP1 */
     if (int_flag & LETIMER_IFC_COMP1){
-    	event |= COMP1_MASK;
-        LETIMER0_COMP1_Disable();
+        event |= COMP1_MASK;
     }
 
     /* Reenabling interrupts */

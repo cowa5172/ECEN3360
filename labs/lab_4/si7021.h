@@ -8,6 +8,8 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
+extern char ascii[7];
+
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
@@ -16,7 +18,7 @@
 #define TEMP_REG       0xE3   // address of the measure temp hold master mode
 #define BIT_RES_12     0x81   // specifies 12 bit resolution for the SI7021
 #define BIT_RES_14     0x00   // specifies 14 bit resolution for the SI7021
-#define THRESHOLD_TEMP 18
+#define THRESHOLD_TEMP 15
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
@@ -87,7 +89,7 @@ uint8_t SI7021_Read_User_Reg(void);
  * data         float       temperature code from Si7021
  */
 
-float SI7021_Measure_Temp(void);
+void SI7021_Measure_Temp(void);
 
 /*****************************************************************************/
 
@@ -106,3 +108,5 @@ float SI7021_Measure_Temp(void);
  */
 
 float convert_temp(uint16_t);
+
+void temp_to_ASCII(float);

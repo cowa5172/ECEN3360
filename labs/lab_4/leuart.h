@@ -1,4 +1,7 @@
 #include "em_leuart.h"
+#include "si7021.h"
+#include <string.h>
+
 /*
  * leuart.h
  *
@@ -11,6 +14,8 @@
 
 extern volatile bool stop_RX;
 extern volatile bool stop_TX;
+
+#define MAX_CHAR           (strlen(ascii))
 
 #define LEUART0_CMD        LEUART0 -> CMD
 #define LEUART0_CTRL       LEUART0 -> CTRL
@@ -33,7 +38,5 @@ extern volatile bool stop_TX;
 void leuart0_init(void);
 void LEUART0_Write(void);
 uint8_t LEUART0_Read(void);
-void LEUART0_Change_Name(void);
-void LEUART0_Wait_TXBL(void);
-void LEUART0_Wait_RXDATAV(void);
+void LEUART0_IRQHandler(void);
 #endif /* SRC_LEUART_H_ */

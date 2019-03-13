@@ -65,61 +65,33 @@ int main(void){
     /* Enable I2C0 */
     I2C_Enable(I2C0, true);
 
-    /* Enable LEUART0 */
-    LEUART_Enable(LEUART0, leuartEnable);
+    while(LEUART0 -> SYNCBUSY);
 
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
 
-    bool UART_EN = false;
-
-    while(LEUART0 -> SYNCBUSY);
     while (1) {
-    	if (UART_EN == false){
-    		UART_EN = true;
-    		LEUART0_TXBL_Enable();
-    		LEUART0_RXDATAV_Enable();
-    	}
         if (event == 0){
         	EMU_Sleep();
         }
         if (event & COMP0_MASK){
+        	event &= ~COMP0_MASK;
         	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
-            event &= ~COMP0_MASK;
-            LETIMER0_COMP0_Enable();
         }
         if (event & COMP1_MASK){
+        	event &= ~COMP1_MASK;
             LPM_Enable();
-            float temp = SI7021_Measure_Temp();
-            if (temp < THRESHOLD_TEMP)
-            	GPIO_PinOutSet(LED0_PORT, LED0_PIN);
-            else
-            	GPIO_PinOutClear(LED0_PORT, LED0_PIN);
+            SI7021_Measure_Temp();
             LPM_Disable();
-            LETIMER0_COMP1_Enable();
-            event &= ~COMP1_MASK;
-        }
-        if (event & ACK_MASK){
-
-			event &= ~ACK_MASK;
-        }
-        if (event & NACK_MASK){
-
-        	event &= ~NACK_MASK;
-        }
-        if (event & I2C_RXDV_MASK){
-
-        	event &= ~I2C_RXDV_MASK;
-        }
-        if (event & TXC_MASK){
-
-        	event &= ~TXC_MASK;
+            LEUART_Enable(LEUART0, leuartEnable);
+            stop_TX = false;
+            LEUART0_TXBL_Enable();
         }
         if (event & TXBL_MASK){
         	event &= ~TXBL_MASK;            // Remove event from scheduler
             LEUART0_Write();                // If TX buffer full, write
             if (stop_TX){
-            	LEUART0_TX_Disable();
+            	LEUART0_TXBL_Disable();     // Disable TXBL interrupts indefinitely
             } else{
             	LEUART0_TXBL_Enable();      // Enable TX interrupts
             }
@@ -128,9 +100,9 @@ int main(void){
         	event &= ~UART_RXDV_MASK;       // Remove event from scheduler
             uint8_t data = LEUART0_Read();  // If RX buffer full, read
             if (stop_RX){
-            	LEUART0_RX_Disable();
+            	LEUART0_RXDATAV_Disable();
             } else{
-            	LEUART0_RXDATAV_Enable();      // Enable TX interrupts
+            	LEUART0_RXDATAV_Enable();   // Enable RXDATAV interrupts
             }
         }
     }
