@@ -88,6 +88,7 @@ float convert_temp(uint16_t data){
 void temp_to_ASCII(float temp){
 	int temp_int = temp * 10;
 	int working;
+	int zero_flag = 0;
 	int i = 0;
 	int place = 1;
 	int zeros = 3;
@@ -98,13 +99,23 @@ void temp_to_ASCII(float temp){
 	}
 	else ascii[i++] = '+';
 
-	while ((place * 10) < temp_int){
+	while ((place * 10) <= temp_int){
 		place = place * 10;
 		zeros--;
 	}
 
+	if (zeros == 3){
+		zero_flag = true;
+		zeros = 2;
+	}
+
 	for (int j = zeros; j > 0; j--){
 		ascii[i++] = ' ';
+	}
+
+	if (zero_flag){
+		ascii[i++] = '0';
+		ascii[i++] = '.';
 	}
 
 	while (temp_int > 0){
