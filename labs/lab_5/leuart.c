@@ -11,10 +11,10 @@
  *      Author: Dylan
  */
 
-static uint8_t write_count = 0;
-static uint8_t read_count = 0;
-bool stop_TX = false;
-bool stop_RX = false;
+volatile uint8_t write_count = 0;
+volatile uint8_t read_count = 0;
+volatile bool stop_TX = false;
+volatile bool stop_RX = false;
 
 void leuart0_init(void){
 	LEUART_Init_TypeDef leuart_init;
@@ -48,7 +48,7 @@ void LEUART0_Write(void){
 }
 
 void LEUART0_Read(bool flag){
-	if (flag == 1){
+	if (stop_RX == false){
 		ascii_RX[read_count++] = LEUART_Rx(LEUART0);
 	} else {
 		stop_RX = true;
@@ -56,14 +56,14 @@ void LEUART0_Read(bool flag){
 	}
 }
 
-bool LEUART0_Decode(uint32_t cmd){
+bool LEUART0_Decode(){
 	bool scale;
-	if (cmd[1] == 'D' || cmd[1] == 'd'){
-		if (cmd[2] == 'C' || cmd[2] == 'c'){
-			scale = 0;
+	if (ascii_RX[1] == 'D' || ascii_RX[1] == 'd'){
+		if (ascii_RX[2] == 'C' || ascii_RX[2] == 'c'){
+			scale = CELSIUS;
 		}
-		if (cmd[2] == 'F' || cmd[2] == 'f'){
-			scale = 1;
+		if (ascii_RX[2] == 'F' || ascii_RX[2] == 'f'){
+			scale = FAHRENHEIT;
 		}
 	}
 	return scale;
@@ -75,21 +75,18 @@ void LEUART0_IRQHandler(void){
 	LEUART0_FLAG_CLR = int_flag;
 
 	if (int_flag & LEUART_IF_TXBL){
-		event |= TXBL_MASK;         // Set event in scheduler
-		LEUART0_TXBL_Disable();     // Disable TX interrupt
+		event |= TXBL_MASK;
+		LEUART0_TX_Disable();    // Disable TX transmission
 	}
 	if (int_flag & LEUART_IF_RXDATAV){
-		event |= UART_RXDV_MASK;    // Set event in scheduler
-		LEUART0_RXDATAV_Disable();  // Disable RX interrupt
+		event |= UART_RXDV_MASK;
+		LEUART0_RX_Disable();    // Disable RX transmission
 	}
 	if (int_flag & LEUART_IF_STARTF){
 		event |= STARTF_MASK;
-		LEUART0_RXDATAV_Enable();
 	}
 	if (int_flag & LEUART_IF_SIGF){
 		event |= SIGF_MASK;
-		LEUART0_RXDATAV_Disable();
-		LEUART0 -> CMD |= RXBLOCKEN;
 	}
 
 	CORE_ATOMIC_IRQ_ENABLE();

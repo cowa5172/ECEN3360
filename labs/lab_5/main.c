@@ -71,11 +71,9 @@ int main(void){
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        bool scale, startf_flag;
-        uint32_t command;
-        if (event == 0){
-        	EMU_Sleep();
-        }
+        bool scale;
+        bool reset_flag = false;
+        if (event == 0) EMU_Sleep();
         if (event & COMP0_MASK){
         	event &= ~COMP0_MASK;
         	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
@@ -87,34 +85,50 @@ int main(void){
             LPM_Disable();
             LEUART_Enable(LEUART0, leuartEnable);
             stop_TX = false;
-            LEUART0_TXBL_Enable();
+            LEUART0_TX_Enable();
         }
         if (event & TXBL_MASK){
         	event &= ~TXBL_MASK;           // Remove event from scheduler
             LEUART0_Write();               // If TX buffer full, write
             if (stop_TX){
-            	LEUART0_TXBL_Disable();    // Disable TXBL interrupts indefinitely
+            	LEUART0_TX_Disable();    // Disable TXBL interrupts indefinitely
             } else {
-            	LEUART0_TXBL_Enable();     // Enable TX interrupts
+            	LEUART0_TX_Enable();     // Enable TX interrupts
             }
         }
         if (event & UART_RXDV_MASK){
         	event &= ~UART_RXDV_MASK;      // Remove event from scheduler
             LEUART0_Read(startf_flag);     // If RX buffer full, read
+
+            /* 
+             * If full command has been received, disable RXDATAV interrupts.
+             * Otherwise, keep RXDATAV interrupts enable to receive more data.
+             */
             if (stop_RX){
-            	LEUART0_RXDATAV_Disable();
+            	LEUART0_RX_Disable();
             } else {
-            	LEUART0_RXDATAV_Enable();  // Enable RXDATAV interrupts
+            	LEUART0_RX_Enable();
             }
         }
         if (event & STARTF_MASK){
             event &= ~STARTF_MASK;
-            startf_flag = 1;
+
+            /* 
+             * Check if startframe has been repeated before sigframe received.
+             * This would imply that the user has aborted the first command
+             * and attempted another.
+             */
+            if (reset_flag == false) reset_flag = true;
+            else read_count = 0;
+
+            stop_RX = false;
         }
         if (event & SIGF_MASK){
             event &= ~SIGF_MASK;
-            startf_flag = 0;
-            scale = LEUART0_Decode(command);
+            stop_RX = true;
+            reset_flag = false;
+            scale = LEUART0_Decode();
+            LEUART0 -> CMD |= RXBLOCKEN;
         }
     }
 }
