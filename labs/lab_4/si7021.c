@@ -87,45 +87,54 @@ float convert_temp(uint16_t data){
 
 void temp_to_ASCII(float temp){
 	int temp_int = temp * 10;
-	int working;
 	int zero_flag = 0;
 	int i = 0;
 	int place = 1;
 	int zeros = 3;
 
+	/* Determining the sign of the number */
 	if (temp < 0){
 		ascii[i++] = '-';
 		temp_int = temp_int * (-1);
-	}
-	else ascii[i++] = '+';
+	} else ascii[i++] = '+';
 
+	/* Determining the number of zeros and digits */
 	while ((place * 10) <= temp_int){
 		place = place * 10;
 		zeros--;
 	}
 
+	/* Special case where number is less than 1 */
 	if (zeros == 3){
 		zero_flag = true;
 		zeros = 2;
 	}
 
+	/* Inserting leading spaces */
 	for (int j = zeros; j > 0; j--){
 		ascii[i++] = ' ';
 	}
 
+	/* Continuation of special case */
 	if (zero_flag){
 		ascii[i++] = '0';
 		ascii[i++] = '.';
 	}
 
-	while (temp_int > 0){
-		working = temp_int / place;
-		working += 0x30;
-		ascii[i++] = working;
+	/* Inserting number into string */
+	while (place > 0){
+		ascii[i++] = (temp_int / place) + 0x30;
 		if (place == 10) ascii[i++] = '.';
 		temp_int = temp_int % place;
-		if (place == 10 && temp_int == 0) ascii[i++] = '0';
-		place = place / 10;
+		if (ascii[i - 1] == '.'){
+			if (temp_int == 0) ascii[i++] = '0';
+			else {
+				ascii[i++] = (temp_int / (place / 10)) + 0x30;
+			}
+			place = 0;
+		} else place = place / 10;
 	}
+
+	/* Adding Celsius symbol */
 	ascii[i++] = 'C';
 }
