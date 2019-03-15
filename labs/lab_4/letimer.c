@@ -11,7 +11,7 @@
  * filename: letimer.c                                                        *
  *                                                                            *
  * purpose: Contains functions pertaining to the operation of the LETIMER0    *
- *          peripheral, such as initialisation and interrupt handling         *
+ *          peripheral, such as initialisation and interrupt handling.        *
  *                                                                            *
  * date created: 22 Jan 2019                                                  *
  *                                                                            *
@@ -23,9 +23,9 @@
  *****************************************************************************/
 
 void letimer0_init(void){
-    unsigned int    period_ticks, on_ticks;
-    unsigned int    letimer_freq;
-    unsigned int    prescaler, eff_prescaler;
+    unsigned int period_ticks, on_ticks;
+    unsigned int letimer_freq;
+    unsigned int prescaler, eff_prescaler;
   
     /* Determining the frequency to use based on energy mode */
     if (LETIMER0_EM == EM4) letimer_freq = ULFRCO_TICKS;
@@ -56,18 +56,18 @@ void letimer0_init(void){
     letimer_init.bufTop   = false;
     letimer_init.comp0Top = true;
     letimer_init.debugRun = false;
-    letimer_init.enable   = false;                  // disabling during init
+    letimer_init.enable   = false;                  // Disabling during init
     letimer_init.out0Pol  = 0;
     letimer_init.out1Pol  = 0;
-    letimer_init.repMode  = letimerRepeatFree;      // setting repeat free mode
-    letimer_init.ufoa0    = letimerUFOANone;        // disabling underflow
-    letimer_init.ufoa1    = letimerUFOANone;        // disabling underflow
+    letimer_init.repMode  = letimerRepeatFree;      // Setting repeat free mode
+    letimer_init.ufoa0    = letimerUFOANone;        // Disabling underflow
+    letimer_init.ufoa1    = letimerUFOANone;        // Disabling underflow
 
     LETIMER_Init(LETIMER0, &letimer_init);          // Initialising
 
     /* Setting time compare values */
-    LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // setting comp0 register
-    LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // setting comp1 register
+    LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // Setting comp0 register
+    LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // Setting comp1 register
 
     /* Initialising interrupts on LETIMER COMP0 and COMP1 */
     LETIMER_Interrupt_Clear();
@@ -86,12 +86,10 @@ void LETIMER0_IRQHandler(void){
     int_flag = LETIMER0_FLAG;
     LETIMER0_FLAG_CLR = int_flag;
 
-    /* Sensor enabled when timer reaches COMP0 */
+    /* Scheduling COMP0 and COMP1 interrupts */
     if (int_flag & LETIMER_IFC_COMP0){
-    	event |= COMP0_MASK;
+        event |= COMP0_MASK;
     }
-
-    /* Temperature read when timer reaches COMP1 */
     if (int_flag & LETIMER_IFC_COMP1){
         event |= COMP1_MASK;
     }

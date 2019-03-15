@@ -58,8 +58,8 @@ uint8_t SI7021_Read_User_Reg(void){
 }
 
 void SI7021_Measure_Temp(void){
-	I2C0_Send_Abort();
-	I2C0_CMD = I2C_CMD_CLEARPC;
+    I2C0_Send_Abort();
+    I2C0_CMD = I2C_CMD_CLEARPC;
 
     /* Address temperature read register */
     I2C0_Start(I2C_WRITE);
@@ -86,55 +86,55 @@ float convert_temp(uint16_t data){
 }
 
 void temp_to_ASCII(float temp){
-	int temp_int = temp * 10;
-	int zero_flag = 0;
-	int i = 0;
-	int place = 1;
-	int zeros = 3;
+    int temp_int = temp * 10;
+    int zero_flag = 0;
+    int i = 0;
+    int place = 1;
+    int zeros = 3;
 
-	/* Determining the sign of the number */
-	if (temp < 0){
-		ascii[i++] = '-';
-		temp_int = temp_int * (-1);
-	} else ascii[i++] = '+';
+    /* Determining the sign of the number */
+    if (temp < 0){
+        ascii[i++] = '-';
+        temp_int = temp_int * (-1);
+    } else ascii[i++] = '+';
 
-	/* Determining the number of zeros and digits */
-	while ((place * 10) <= temp_int){
-		place = place * 10;
-		zeros--;
-	}
+    /* Determining the number of zeros and digits */
+    while ((place * 10) <= temp_int){
+        place = place * 10;
+        zeros--;
+    }
 
-	/* Special case where number is less than 1 */
-	if (zeros == 3){
-		zero_flag = true;
-		zeros = 2;
-	}
+    /* Special case where number is less than 1 */
+    if (zeros == 3){
+        zero_flag = true;
+        zeros = 2;
+    }
 
-	/* Inserting leading spaces */
-	for (int j = zeros; j > 0; j--){
-		ascii[i++] = ' ';
-	}
+    /* Inserting leading spaces */
+    for (int j = zeros; j > 0; j--){
+        ascii[i++] = ' ';
+    }
 
-	/* Continuation of special case */
-	if (zero_flag){
-		ascii[i++] = '0';
-		ascii[i++] = '.';
-	}
+    /* Continuation of special case */
+    if (zero_flag){
+        ascii[i++] = '0';
+        ascii[i++] = '.';
+    }
 
-	/* Inserting number into string */
-	while (place > 0){
-		ascii[i++] = (temp_int / place) + 0x30;
-		if (place == 10) ascii[i++] = '.';
-		temp_int = temp_int % place;
-		if (ascii[i - 1] == '.'){
-			if (temp_int == 0) ascii[i++] = '0';
-			else {
-				ascii[i++] = (temp_int / (place / 10)) + 0x30;
-			}
-			place = 0;
-		} else place = place / 10;
-	}
+    /* Inserting number into string */
+    while (place > 0){
+        ascii[i++] = (temp_int / place) + 0x30;
+        if (place == 10) ascii[i++] = '.';
+        temp_int = temp_int % place;
+        if (ascii[i - 1] == '.'){
+            if (temp_int == 0) ascii[i++] = '0';
+            else {
+                ascii[i++] = (temp_int / (place / 10)) + 0x30;
+            }
+            place = 0;
+        } else place = place / 10;
+    }
 
-	/* Adding Celsius symbol */
-	ascii[i++] = 'C';
+    /* Adding Celsius symbol */
+    ascii[i++] = 'C';
 }

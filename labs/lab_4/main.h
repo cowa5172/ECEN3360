@@ -23,6 +23,5 @@
 #define I2C_RXDV_MASK   0b00010000
 #define TXC_MASK        0b00100000
 #define TXBL_MASK       0b01000000
-#define UART_RXDV_MASK  0b10000000
 
-extern volatile uint32_t event;
+extern volatile uint8_t event;

@@ -21,7 +21,7 @@
  * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
-volatile uint32_t event = 0;
+volatile uint8_t event = 0;
 
 int main(void){
     EMU_Block(EM3);
@@ -71,39 +71,34 @@ int main(void){
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        if (event == 0){
-        	EMU_Sleep();
-        }
+        if (event == 0) EMU_Sleep();
         if (event & COMP0_MASK){
-        	event &= ~COMP0_MASK;
-        	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
+            event &= ~COMP0_MASK;
+            GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
         }
         if (event & COMP1_MASK){
-        	event &= ~COMP1_MASK;
+            event &= ~COMP1_MASK;
+
+            /* Measure temperature */
             LPM_Enable();
             SI7021_Measure_Temp();
             LPM_Disable();
+
+            /* Enable TX to transmit full temp to bluetooth module */
             LEUART_Enable(LEUART0, leuartEnable);
             stop_TX = false;
             LEUART0_TXBL_Enable();
         }
         if (event & TXBL_MASK){
-        	event &= ~TXBL_MASK;            // Remove event from scheduler
-            LEUART0_Write();                // If TX buffer full, write
-            if (stop_TX){
-            	LEUART0_TXBL_Disable();     // Disable TXBL interrupts indefinitely
-            } else{
-            	LEUART0_TXBL_Enable();      // Enable TX interrupts
-            }
-        }
-        if (event & UART_RXDV_MASK){
-        	event &= ~UART_RXDV_MASK;       // Remove event from scheduler
-            uint8_t data = LEUART0_Read();  // If RX buffer full, read
-            if (stop_RX){
-            	LEUART0_RXDATAV_Disable();
-            } else{
-            	LEUART0_RXDATAV_Enable();   // Enable RXDATAV interrupts
-            }
+            event &= ~TXBL_MASK;  // Remove event from scheduler
+            LEUART0_Write();      // If TX buffer full, write
+
+            /* 
+             * Disable TXBL if temperature is done transmitting, else reenable
+             * for more transmissions.
+             */
+            if (stop_TX) LEUART0_TXBL_Disable();
+            else LEUART0_TXBL_Enable();
         }
     }
 }
