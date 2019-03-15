@@ -30,6 +30,7 @@ extern volatile bool stop_TX;
 
 /* LEUART0 Operation Aliases */
 #define LEUART0_Loopback_Enable() (LEUART0_CTRL |= LEUART_CTRL_LOOPBK)
+#define LEUART0_TX_Enable()       (LEUART0_CMD |= LEUART_CMD_TXEN)
 #define LEUART0_TX_Disable()      (LEUART0_CMD |= LEUART_CMD_TXDIS)
 #define LEUART0_TXBL_Enable()     (LEUART0_INT_EN |= LEUART_IEN_TXBL)
 #define LEUART0_TXBL_Disable()    (LEUART0_INT_EN &= ~LEUART_IEN_TXBL)

@@ -18,6 +18,10 @@
 static uint8_t write_count = 0;
 volatile bool stop_TX = false;
 
+/******************************************************************************
+ * FUNCTION DEFINITIONS                                                       *
+ *****************************************************************************/
+
 void leuart0_init(void){
     LEUART_Init_TypeDef leuart_init;
     leuart_init.enable = false;             // Disabling during init

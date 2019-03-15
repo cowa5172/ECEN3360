@@ -18,7 +18,6 @@ extern char ascii[7];
 #define TEMP_REG       0xE3   // address of the measure temp hold master mode
 #define BIT_RES_12     0x81   // specifies 12 bit resolution for the SI7021
 #define BIT_RES_14     0x00   // specifies 14 bit resolution for the SI7021
-#define THRESHOLD_TEMP 15
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
@@ -108,5 +107,21 @@ void SI7021_Measure_Temp(void);
  */
 
 float convert_temp(uint16_t);
+
+/*****************************************************************************/
+
+/*
+ * function name: temp_to_ASCII
+ *
+ * description: Converts Celsius temperature value into an array of ASCII
+ *              characters.
+ *
+ * arguments:
+ * argument     type        description
+ * --------     ----        -----------
+ * data         float       Celsius temperature
+ * 
+ * returns: none
+ */
 
 void temp_to_ASCII(float);

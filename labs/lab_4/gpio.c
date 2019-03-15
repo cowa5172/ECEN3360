@@ -31,7 +31,7 @@ void gpio_init(void){
     GPIO_PinModeSet(I2C_SDA_PORT, I2C_SDA_PIN, gpioModeDisabled, I2C_SDA_DEF);
 
     GPIO_DriveStrengthSet(LEUART_TX_PORT, gpioDriveStrengthWeakAlternateWeak);
-	GPIO_DriveStrengthSet(LEUART_RX_PORT, gpioDriveStrengthWeakAlternateWeak);
+    GPIO_DriveStrengthSet(LEUART_RX_PORT, gpioDriveStrengthWeakAlternateWeak);
     GPIO_PinModeSet(LEUART_TX_PORT, LEUART_TX_PIN, gpioModePushPull, LEUART_TX_DEF);
     GPIO_PinModeSet(LEUART_RX_PORT, LEUART_RX_PIN, gpioModeInput, LEUART_RX_DEF);
 }

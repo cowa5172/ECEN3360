@@ -87,12 +87,8 @@ void LETIMER0_IRQHandler(void){
     LETIMER0_FLAG_CLR = int_flag;
 
     /* Scheduling COMP0 and COMP1 interrupts */
-    if (int_flag & LETIMER_IFC_COMP0){
-        event |= COMP0_MASK;
-    }
-    if (int_flag & LETIMER_IFC_COMP1){
-        event |= COMP1_MASK;
-    }
+    if (int_flag & LETIMER_IFC_COMP0) event |= COMP0_MASK;
+    if (int_flag & LETIMER_IFC_COMP1) event |= COMP1_MASK;
 
     /* Reenabling interrupts */
     CORE_ATOMIC_IRQ_ENABLE();

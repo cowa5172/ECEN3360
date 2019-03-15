@@ -39,8 +39,8 @@
 #define I2C0_Send_ACK()     (I2C0_CMD = I2C_CMD_ACK)
 #define I2C0_Send_NACK()    (I2C0_CMD = I2C_CMD_NACK)
 #define I2C0_Clear_ACK()    (I2C0_FLAG_CLR = I2C_IFC_ACK)
-#define I2C0_Int_Clear()	(I2C0_FLAG_CLR = I2C_IFC_ACK)
-#define I2C0_Int_Enable()	(I2C0_INT_EN |= I2C_IEN_ACK | I2C_IEN_RXDATAV)
+#define I2C0_Int_Clear()    (I2C0_FLAG_CLR = I2C_IFC_ACK)
+#define I2C0_Int_Enable()   (I2C0_INT_EN |= I2C_IEN_ACK | I2C_IEN_RXDATAV)
 #define I2C0_Int_Disable()  (I2C0_INT_EN &= !(I2C_IEN_ACK | I2C_IEN_RXDATAV))
 
 /******************************************************************************
@@ -63,7 +63,7 @@ void i2c0_init(void);
 /*****************************************************************************/
 
 /*
- * function name: reset_i2c
+ * function name: I2C0_Reset
  *
  * description: Resets the I2C by aborting all signals if the bus is busy
  *
@@ -77,7 +77,7 @@ void I2C0_Reset(void);
 /*****************************************************************************/
 
 /*
- * function name: start_i2c
+ * function name: I2C0_Start
  *
  * description: Starts the I2C and sends the write signal to the slave
  *              peripheral
@@ -95,7 +95,21 @@ void I2C0_Start(bool);
 /*****************************************************************************/
 
 /*
- * function name: write_i2c
+ * function name: I2C0_Stop
+ *
+ * description: Stops the I2C
+ *
+ * arguments: none
+ * 
+ * returns: none
+ */
+
+void I2C0_Stop(void);
+
+/*****************************************************************************/
+
+/*
+ * function name: I2C0_Write
  *
  * description: Loads a byte of data to the TX register to be sent to the
  *              peripheral
@@ -108,14 +122,12 @@ void I2C0_Start(bool);
  * returns: none
  */
 
-void I2C0_Stop(void);
-
 void I2C0_Write(uint8_t);
 
 /*****************************************************************************/
 
 /*
- * function name: read_i2c
+ * function name: I2C0_Read
  *
  * description: Reads a byte of data from the RX register before sending a
  *              NACK signal to cease communication
@@ -130,19 +142,30 @@ void I2C0_Write(uint8_t);
 
 uint8_t I2C0_Read(void);
 
+/*****************************************************************************/
+
+/*
+ * function name: I2C0_Wait_RXDATAV
+ *
+ * description: Waits for valid data in the RXDATA register
+ *
+ * arguments: none
+ * 
+ * returns: none
+ */
+
 void I2C0_Wait_RXDATAV(void);
-void I2C0_Wait_ACK(void);
 
 /*****************************************************************************/
 
 /*
- * function name: I2C0_IRQHandler
+ * function name: I2C0_Wait_ACK
  *
- * description: The interrupt handler for the I2C0
+ * description: Waits for an ACK signal from the peripheral
  *
  * arguments: none
- *
+ * 
  * returns: none
  */
 
-void I2C0_IRQHandler(void);
+void I2C0_Wait_ACK(void);

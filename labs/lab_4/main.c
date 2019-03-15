@@ -93,10 +93,8 @@ int main(void){
             event &= ~TXBL_MASK;  // Remove event from scheduler
             LEUART0_Write();      // If TX buffer full, write
 
-            /* 
-             * Disable TXBL if temperature is done transmitting, else reenable
-             * for more transmissions.
-             */
+            /* Disable TXBL if temperature is done transmitting, else reenable
+               for more transmissions. */
             if (stop_TX) LEUART0_TXBL_Disable();
             else LEUART0_TXBL_Enable();
         }
