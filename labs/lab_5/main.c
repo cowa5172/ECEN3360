@@ -22,6 +22,8 @@
  *****************************************************************************/
 
 volatile uint16_t event = 0;
+volatile bool scale;
+bool reset_flag = false;
 
 int main(void){
     EMU_Block(EM3);
@@ -65,70 +67,111 @@ int main(void){
     /* Enable I2C0 */
     I2C_Enable(I2C0, true);
 
+    /* Enable LEUART0 */
+    LEUART_Enable(LEUART0, leuartEnable);
+
     while(LEUART0 -> SYNCBUSY);
 
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
 
     while (1) {
-        bool scale;
-        bool reset_flag = false;
+        /*
+         * Scheduler for no event; when nothing else is happening the CPU
+         * enters sleep at the defined energy mode and is awoken when a
+         * relevant interrupt is received.
+         */
         if (event == 0) EMU_Sleep();
+
+        /*
+         * Scheduler for the COMP0 event; invoked when the LETIMER reaches
+         * the COMP0 value, at which point the SI7021 temperature sensor
+         * is enabled.
+         */
         if (event & COMP0_MASK){
         	event &= ~COMP0_MASK;
         	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
         }
+
+        /* 
+         * Schduler for the COMP1 event; invoked when the LETIMER reaches
+         * the COMP1 value, at which point the temperature is measured.
+         */
         if (event & COMP1_MASK){
         	event &= ~COMP1_MASK;
+
+            /* Measure temperature using the SI7021 */
             LPM_Enable();
+            LEUART0_Decode();
             SI7021_Measure_Temp(scale);
             LPM_Disable();
-            LEUART_Enable(LEUART0, leuartEnable);
-            stop_TX = false;
-            LEUART0_TX_Enable();
-        }
-        if (event & TXBL_MASK){
-        	event &= ~TXBL_MASK;           // Remove event from scheduler
-            LEUART0_Write();               // If TX buffer full, write
-            if (stop_TX){
-            	LEUART0_TX_Disable();    // Disable TXBL interrupts indefinitely
-            } else {
-            	LEUART0_TX_Enable();     // Enable TX interrupts
-            }
-        }
-        if (event & UART_RXDV_MASK){
-        	event &= ~UART_RXDV_MASK;      // Remove event from scheduler
-            LEUART0_Read(startf_flag);     // If RX buffer full, read
 
-            /* 
-             * If full command has been received, disable RXDATAV interrupts.
-             * Otherwise, keep RXDATAV interrupts enable to receive more data.
-             */
-            if (stop_RX){
-            	LEUART0_RX_Disable();
-            } else {
-            	LEUART0_RX_Enable();
-            }
+            /* Enable TX transmission once full ascii string created */
+            stop_TX = false;
+            LEUART0_TXBL_Enable();
         }
+
+        /*
+         * Scheduler for the TXBL event; invoked when the temperature has been
+         * converted into an array of ascii values and stopped once all those
+         * values have been transmitted.
+         */
+        if (event & TXBL_MASK){
+        	event &= ~TXBL_MASK;
+            LEUART0_Write();
+
+            /* Disable TXBL if temperature is done transmitting, else reenable
+               for more transmissions. */
+            if (stop_TX) LEUART0_TXBL_Disable();
+            else LEUART0_TXBL_Enable();
+        }
+
+        /* 
+         * Scheduler for RXDATAV event; only active when RXBLOCK is disabled
+         * following a STARTF interrupt and before it is reenabled following a
+         * SIGF interrupt.
+         */
+        if (event & UART_RXDV_MASK){
+        	event &= ~UART_RXDV_MASK;
+            LEUART0_Read();
+
+            /* If full command has been received, disable RXDATAV interrupts.
+               Otherwise, keep RXDATAV interrupts enable to receive more data. */
+            if (stop_RX) LEUART0_RXDATAV_Disable();
+            else LEUART0_RXDATAV_Enable();
+        }
+
+        /*
+         * Scheduler for STARTF event; invoked when the start frame '?' has
+         * been received and RXBLOCK has automatically been disabled.
+         */
         if (event & STARTF_MASK){
             event &= ~STARTF_MASK;
 
-            /* 
-             * Check if startframe has been repeated before sigframe received.
-             * This would imply that the user has aborted the first command
-             * and attempted another.
-             */
+            /* Check if startframe has been repeated before sigframe received;
+               reset_flag is set true the first time a startframe has been
+               received and is only disabled once a sigframe is received. In
+               the event that a second startframe has been received before a
+               sigframe, read_count is reset to overwrite the previous
+               aborted command. */
             if (reset_flag == false) reset_flag = true;
             else read_count = 0;
-
-            stop_RX = false;
         }
+
+        /*
+         * Scheduler for SIGF event; invoked when the signal frame '#' has
+         * been received.
+         */
         if (event & SIGF_MASK){
             event &= ~SIGF_MASK;
-            stop_RX = true;
+
+            /* When sigframe has been received, RX transmission is stopped,
+               read_count is reset to 0 to allow for the next RX command, and
+               reset_flag is set false to indicate that no startframe has been
+               received. Temperature scale is decoded and RX is blocked. */
             reset_flag = false;
-            scale = LEUART0_Decode();
-            LEUART0 -> CMD |= RXBLOCKEN;
+            LEUART0_CMD |= LEUART_CMD_RXBLOCKEN;
+            read_count = 0;
         }
     }
 }

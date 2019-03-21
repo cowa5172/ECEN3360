@@ -105,9 +105,25 @@ void SI7021_Measure_Temp(bool);
  * --------     ----        -----------
  * data         uint16_t    temperature code from Si7021
  * 
- * returns: Temperature in celsius (float)
+ * returns: Temperature in celsius or fahrenheit (float)
  */
 
-float convert_temp(uint16_t, bool);
+float convert_temp(uint16_t);
 
-void temp_to_ASCII(float, bool);
+/*****************************************************************************/
+
+/*
+ * function name: temp_to_ASCII
+ *
+ * description: Converts Celsius temperature value into an array of ASCII
+ *              characters.
+ *
+ * arguments:
+ * argument     type        description
+ * --------     ----        -----------
+ * data         float       Celsius temperature
+ * 
+ * returns: none
+ */
+
+void temp_to_ASCII(float);

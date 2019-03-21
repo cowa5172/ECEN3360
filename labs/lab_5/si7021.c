@@ -78,17 +78,17 @@ void SI7021_Measure_Temp(bool scale){
     I2C0_Stop();
 
     /* Convert temperature to Celsius */
-    float temp = convert_temp(temp_code, scale);
-    temp_to_ASCII(temp, scale);
+    float temp = convert_temp(temp_code);
+    temp_to_ASCII(temp);
 }
 
-float convert_temp(uint16_t data, bool scale){
+float convert_temp(uint16_t data){
 	float temp = (175.72 * data / MAX_COUNT - 46.85);
 	if (scale == FAHRENHEIT) temp = temp * 9 / 5 + 32;
-    return temp
+    return temp;
 }
 
-void temp_to_ASCII(float temp, bool scale){
+void temp_to_ASCII(float temp){
 	int temp_int = temp * 10;
 	int zero_flag = 0;
 	int i = 0;

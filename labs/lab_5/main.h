@@ -30,3 +30,4 @@
 #define FAHRENHEIT      1
 
 extern volatile uint16_t event;
+extern volatile bool scale;

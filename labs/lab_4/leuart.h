@@ -56,7 +56,7 @@ void leuart0_init(void);
 /*****************************************************************************/
 
 /*
- * function name: LETIMER0_Write
+ * function name: LEUART0_Write
  *
  * description: Function for sending a byte of data to a UART peripheral.
  *              Written expressly to send the temperature in ASCII format to

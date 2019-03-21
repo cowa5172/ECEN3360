@@ -86,15 +86,8 @@ void LETIMER0_IRQHandler(void){
     int_flag = LETIMER0_FLAG;
     LETIMER0_FLAG_CLR = int_flag;
 
-    /* Sensor enabled when timer reaches COMP0 */
-    if (int_flag & LETIMER_IFC_COMP0){
-    	event |= COMP0_MASK;
-    }
-
-    /* Temperature read when timer reaches COMP1 */
-    if (int_flag & LETIMER_IFC_COMP1){
-        event |= COMP1_MASK;
-    }
+    if (int_flag & LETIMER_IFC_COMP0) event |= COMP0_MASK;
+    if (int_flag & LETIMER_IFC_COMP1) event |= COMP1_MASK;
 
     /* Reenabling interrupts */
     CORE_ATOMIC_IRQ_ENABLE();
