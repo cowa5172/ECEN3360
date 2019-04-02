@@ -46,8 +46,8 @@ void I2C0_Start(bool RW){
 }
 
 void I2C0_Stop(void){
-	I2C0_Send_NACK();
-	I2C0_Send_Stop();
+    I2C0_Send_NACK();
+    I2C0_Send_Stop();
 }
 
 void I2C0_Write(uint8_t data){
@@ -61,10 +61,10 @@ uint8_t I2C0_Read(void){
 }
 
 void I2C0_Wait_RXDATAV(void){
-	while(!(I2C0_IF & I2C_IF_RXDATAV));
+    while(!(I2C0_IF & I2C_IF_RXDATAV));
 }
 
 void I2C0_Wait_ACK(void){
-	while(!(I2C0_IF & I2C_IF_ACK));
-	I2C0_Clear_ACK();
+    while(!(I2C0_IF & I2C_IF_ACK));
+    I2C0_Clear_ACK();
 }
