@@ -40,8 +40,10 @@ void leuart0_init(void){
 
 	LEUART0_STARTF = '?';
 	LEUART0_SIGF   = '#';
-	LEUART0_CMD  |= LEUART_CMD_RXBLOCKEN;
-	LEUART0_CTRL |= LEUART_CTRL_SFUBRX;
+	LEUART0_CMD   |= LEUART_CMD_RXBLOCKEN;
+	LEUART0_SFUBRX_Enable();
+
+	LEUART0_INT_EN |= (LEUART_IEN_STARTF | LEUART_IEN_SIGF);
 
 	NVIC_EnableIRQ(LEUART0_IRQn);
 }
@@ -51,11 +53,13 @@ void LEUART0_Write(void){
 	else {
 		stop_TX = true;
 		write_count = 0;
+		LEUART0_TXBL_Disable();
 	}
 }
 
 void LEUART0_Read(void){
-	ascii_RX[read_count++] = LEUART_Rx(LEUART0);
+	ascii_RX[read_count] = LEUART_Rx(LEUART0);
+	read_count++;
 }
 
 void LEUART0_Decode(void){
@@ -71,8 +75,10 @@ void LEUART0_IRQHandler(void){
 	LEUART0_FLAG_CLR = int_flag;
 
 	if (int_flag & LEUART_IF_TXBL){
-		event |= TXBL_MASK;
-		LEUART0_TXBL_Disable();    // Disable TX transmission
+		if (LEUART0_INT_EN & LEUART_IEN_TXBL){
+			event |= TXBL_MASK;
+			LEUART0_TXBL_Disable();    // Disable TX transmission
+		}
 	}
 	if (int_flag & LEUART_IF_RXDATAV){
 		event |= UART_RXDV_MASK;

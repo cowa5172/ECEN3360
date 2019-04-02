@@ -35,7 +35,7 @@ extern volatile bool stop_TX;
 #define LEUART0_ROUTELOC   LEUART0 -> ROUTELOC0
 #define LEUART0_ROUTEPEN   LEUART0 -> ROUTEPEN
 #define LEUART0_STARTF     LEUART0 -> STARTFRAME
-#define LEUART0_SIGF        LEUART0 -> SIGFRAME
+#define LEUART0_SIGF       LEUART0 -> SIGFRAME
 
 /* LEUART0 Operation Aliases */
 #define LEUART0_Loopback_Enable() (LEUART0_CTRL |= LEUART_CTRL_LOOPBK)
@@ -47,6 +47,7 @@ extern volatile bool stop_TX;
 #define LEUART0_TXBL_Disable()    (LEUART0_INT_EN &= ~LEUART_IEN_TXBL)
 #define LEUART0_RXDATAV_Enable()  (LEUART0_INT_EN |= LEUART_IEN_RXDATAV)
 #define LEUART0_RXDATAV_Disable() (LEUART0_INT_EN &= ~LEUART_IEN_RXDATAV)
+#define LEUART0_SFUBRX_Enable()   (LEUART0_CTRL |= LEUART_CTRL_SFUBRX)
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *

@@ -83,64 +83,7 @@ int main(void){
          */
         if (event == 0) EMU_Sleep();
 
-        /*
-         * Scheduler for the COMP0 event; invoked when the LETIMER reaches
-         * the COMP0 value, at which point the SI7021 temperature sensor
-         * is enabled.
-         */
-        if (event & COMP0_MASK){
-        	event &= ~COMP0_MASK;
-        	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
-        }
-
-        /* 
-         * Schduler for the COMP1 event; invoked when the LETIMER reaches
-         * the COMP1 value, at which point the temperature is measured.
-         */
-        if (event & COMP1_MASK){
-        	event &= ~COMP1_MASK;
-
-            /* Measure temperature using the SI7021 */
-            LPM_Enable();
-            LEUART0_Decode();
-            SI7021_Measure_Temp(scale);
-            LPM_Disable();
-
-            /* Enable TX transmission once full ascii string created */
-            stop_TX = false;
-            LEUART0_TXBL_Enable();
-        }
-
-        /*
-         * Scheduler for the TXBL event; invoked when the temperature has been
-         * converted into an array of ascii values and stopped once all those
-         * values have been transmitted.
-         */
-        if (event & TXBL_MASK){
-        	event &= ~TXBL_MASK;
-            LEUART0_Write();
-
-            /* Disable TXBL if temperature is done transmitting, else reenable
-               for more transmissions. */
-            if (stop_TX) LEUART0_TXBL_Disable();
-            else LEUART0_TXBL_Enable();
-        }
-
-        /* 
-         * Scheduler for RXDATAV event; only active when RXBLOCK is disabled
-         * following a STARTF interrupt and before it is reenabled following a
-         * SIGF interrupt.
-         */
-        if (event & UART_RXDV_MASK){
-        	event &= ~UART_RXDV_MASK;
-            LEUART0_Read();
-
-            /* If full command has been received, disable RXDATAV interrupts.
-               Otherwise, keep RXDATAV interrupts enable to receive more data. */
-            if (stop_RX) LEUART0_RXDATAV_Disable();
-            else LEUART0_RXDATAV_Enable();
-        }
-
+        /*********************************************************************/
         /*
          * Scheduler for STARTF event; invoked when the start frame '?' has
          * been received and RXBLOCK has automatically been disabled.
@@ -156,8 +99,26 @@ int main(void){
                aborted command. */
             if (reset_flag == false) reset_flag = true;
             else read_count = 0;
+            LEUART0_RXDATAV_Enable();
         }
 
+        /*********************************************************************/
+        /*
+         * Scheduler for RXDATAV event; only active when RXBLOCK is disabled
+         * following a STARTF interrupt and before it is reenabled following a
+         * SIGF interrupt.
+         */
+        if (event & UART_RXDV_MASK){
+        	event &= ~UART_RXDV_MASK;
+            LEUART0_Read();
+
+            /* If full command has been received, disable RXDATAV interrupts.
+               Otherwise, keep RXDATAV interrupts enable to receive more data. */
+            if (stop_RX) LEUART0_RXDATAV_Disable();
+            else LEUART0_RXDATAV_Enable();
+        }
+
+        /*********************************************************************/
         /*
          * Scheduler for SIGF event; invoked when the signal frame '#' has
          * been received.
@@ -171,7 +132,54 @@ int main(void){
                received. Temperature scale is decoded and RX is blocked. */
             reset_flag = false;
             LEUART0_CMD |= LEUART_CMD_RXBLOCKEN;
+            LEUART0_RXDATAV_Disable();
+            LEUART0_Decode();
             read_count = 0;
+        }
+
+        /*********************************************************************/
+        /*
+         * Scheduler for the COMP0 event; invoked when the LETIMER reaches
+         * the COMP0 value, at which point the SI7021 temperature sensor
+         * is enabled.
+         */
+        if (event & COMP0_MASK){
+        	event &= ~COMP0_MASK;
+        	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
+        }
+
+        /*********************************************************************/
+        /* 
+         * Schduler for the COMP1 event; invoked when the LETIMER reaches
+         * the COMP1 value, at which point the temperature is measured.
+         */
+        if (event & COMP1_MASK){
+        	event &= ~COMP1_MASK;
+
+            /* Measure temperature using the SI7021 */
+            LPM_Enable();
+            SI7021_Measure_Temp(scale);
+            LPM_Disable();
+
+            /* Enable TX transmission once full ascii string created */
+            stop_TX = false;
+            LEUART0_TXBL_Enable();
+        }
+
+        /*********************************************************************/
+        /*
+         * Scheduler for the TXBL event; invoked when the temperature has been
+         * converted into an array of ascii values and stopped once all those
+         * values have been transmitted.
+         */
+        if (event & TXBL_MASK){
+        	event &= ~TXBL_MASK;
+            LEUART0_Write();
+
+            /* Disable TXBL if temperature is done transmitting, else reenable
+               for more transmissions. */
+            if (stop_TX) LEUART0_TXBL_Disable();
+            else LEUART0_TXBL_Enable();
         }
     }
 }
