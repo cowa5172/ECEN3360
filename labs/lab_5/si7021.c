@@ -59,8 +59,8 @@ uint8_t SI7021_Read_User_Reg(void){
 }
 
 void SI7021_Measure_Temp(bool scale){
-	I2C0_Send_Abort();
-	I2C0_CMD = I2C_CMD_CLEARPC;
+    I2C0_Send_Abort();
+    I2C0_CMD = I2C_CMD_CLEARPC;
 
     /* Address temperature read register */
     I2C0_Start(I2C_WRITE);
@@ -83,62 +83,62 @@ void SI7021_Measure_Temp(bool scale){
 }
 
 float convert_temp(uint16_t data){
-	float temp = (175.72 * data / MAX_COUNT - 46.85);
-	if (scale == FAHRENHEIT) temp = temp * 9 / 5 + 32;
+    float temp = (175.72 * data / MAX_COUNT - 46.85);
+    if (scale == FAHRENHEIT) temp = temp * 9 / 5 + 32;
     return temp;
 }
 
 void temp_to_ASCII(float temp){
-	int temp_int = temp * 10;
-	int zero_flag = 0;
-	int i = 0;
-	int place = 1;
-	int zeros = 3;
+    int temp_int = temp * 10;
+    int zero_flag = 0;
+    int i = 0;
+    int place = 1;
+    int zeros = 3;
 
-	/* Determining the sign of the number */
-	if (temp < 0){
-		ascii_TX[i++] = '-';
-		temp_int = temp_int * (-1);
-	} else ascii_TX[i++] = '+';
+    /* Determining the sign of the number */
+    if (temp < 0){
+        ascii_TX[i++] = '-';
+        temp_int = temp_int * (-1);
+    } else ascii_TX[i++] = '+';
 
-	/* Determining the number of zeros and digits */
-	while ((place * 10) <= temp_int){
-		place = place * 10;
-		zeros--;
-	}
+    /* Determining the number of zeros and digits */
+    while ((place * 10) <= temp_int){
+        place = place * 10;
+        zeros--;
+    }
 
-	/* Special case where number is less than 1 */
-	if (zeros == 3){
-		zero_flag = true;
-		zeros = 2;
-	}
+    /* Special case where number is less than 1 */
+    if (zeros == 3){
+        zero_flag = true;
+        zeros = 2;
+    }
 
-	/* Inserting leading spaces */
-	for (int j = zeros; j > 0; j--){
-		ascii_TX[i++] = ' ';
-	}
+    /* Inserting leading spaces */
+    for (int j = zeros; j > 0; j--){
+        ascii_TX[i++] = ' ';
+    }
 
-	/* Continuation of special case */
-	if (zero_flag){
-		ascii_TX[i++] = '0';
-		ascii_TX[i++] = '.';
-	}
+    /* Continuation of special case */
+    if (zero_flag){
+        ascii_TX[i++] = '0';
+        ascii_TX[i++] = '.';
+    }
 
-	/* Inserting number into string */
-	while (place > 0){
-		ascii_TX[i++] = (temp_int / place) + 0x30;
-		if (place == 10) ascii_TX[i++] = '.';
-		temp_int = temp_int % place;
-		if (ascii_TX[i - 1] == '.'){
-			if (temp_int == 0) ascii_TX[i++] = '0';
-			else {
-				ascii_TX[i++] = (temp_int / (place / 10)) + 0x30;
-			}
-			place = 0;
-		} else place = place / 10;
-	}
+    /* Inserting number into string */
+    while (place > 0){
+        ascii_TX[i++] = (temp_int / place) + 0x30;
+        if (place == 10) ascii_TX[i++] = '.';
+        temp_int = temp_int % place;
+        if (ascii_TX[i - 1] == '.'){
+            if (temp_int == 0) ascii_TX[i++] = '0';
+            else {
+                ascii_TX[i++] = (temp_int / (place / 10)) + 0x30;
+            }
+            place = 0;
+        } else place = place / 10;
+    }
 
-	/* Adding Celsius symbol */
-	if (scale == CELSIUS) ascii_TX[i++] = 'C';
-	if (scale == FAHRENHEIT) ascii_TX[i++] = 'F';
+    /* Adding Celsius symbol */
+    if (scale == CELSIUS) ascii_TX[i++] = 'C';
+    if (scale == FAHRENHEIT) ascii_TX[i++] = 'F';
 }

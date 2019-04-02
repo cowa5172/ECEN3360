@@ -16,18 +16,15 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define COMP0_MASK      0b000000001
-#define COMP1_MASK      0b000000010
-#define ACK_MASK        0b000000100
-#define NACK_MASK       0b000001000
-#define I2C_RXDV_MASK   0b000010000
-#define TXBL_MASK       0b000100000
-#define UART_RXDV_MASK  0b001000000
-#define STARTF_MASK     0b010000000
-#define SIGF_MASK       0b100000000
+#define COMP0_MASK      0b00000001
+#define COMP1_MASK      0b00000010
+#define TXBL_MASK       0b00000100
+#define UART_RXDV_MASK  0b00001000
+#define STARTF_MASK     0b00010000
+#define SIGF_MASK       0b00100000
 
 #define CELSIUS         0
 #define FAHRENHEIT      1
 
-extern volatile uint16_t event;
+extern volatile uint8_t event;
 extern volatile bool scale;

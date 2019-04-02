@@ -61,19 +61,10 @@ uint8_t I2C0_Read(void){
 }
 
 void I2C0_Wait_RXDATAV(void){
-	while(!(I2C0_FLAG & I2C_IF_RXDATAV));
+	while(!(I2C0_IF & I2C_IF_RXDATAV));
 }
 
 void I2C0_Wait_ACK(void){
-	while(!(I2C0_FLAG & I2C_IF_ACK));
+	while(!(I2C0_IF & I2C_IF_ACK));
 	I2C0_Clear_ACK();
 }
-
- /*
-void I2C0_IRQHandler(void){
-    CORE_ATOMIC_IRQ_DISABLE();
-    unsigned int int_flag = I2C0 -> IF;
-    I2C0 -> IFC = int_flag;
-    CORE_ATOMIC_IRQ_ENABLE();
-}
-*/

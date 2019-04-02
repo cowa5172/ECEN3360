@@ -21,7 +21,7 @@
  * authors: Keith Graham, Dylan Oh, and Mike Fruge                            *
  *****************************************************************************/
 
-volatile uint16_t event = 0;
+volatile uint8_t event = 0;
 volatile bool scale;
 bool reset_flag = false;
 
@@ -109,7 +109,7 @@ int main(void){
          * SIGF interrupt.
          */
         if (event & UART_RXDV_MASK){
-        	event &= ~UART_RXDV_MASK;
+            event &= ~UART_RXDV_MASK;
             LEUART0_Read();
 
             /* If full command has been received, disable RXDATAV interrupts.
@@ -144,8 +144,8 @@ int main(void){
          * is enabled.
          */
         if (event & COMP0_MASK){
-        	event &= ~COMP0_MASK;
-        	GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
+            event &= ~COMP0_MASK;
+            GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);
         }
 
         /*********************************************************************/
@@ -154,7 +154,7 @@ int main(void){
          * the COMP1 value, at which point the temperature is measured.
          */
         if (event & COMP1_MASK){
-        	event &= ~COMP1_MASK;
+            event &= ~COMP1_MASK;
 
             /* Measure temperature using the SI7021 */
             LPM_Enable();
@@ -173,7 +173,7 @@ int main(void){
          * values have been transmitted.
          */
         if (event & TXBL_MASK){
-        	event &= ~TXBL_MASK;
+            event &= ~TXBL_MASK;
             LEUART0_Write();
 
             /* Disable TXBL if temperature is done transmitting, else reenable

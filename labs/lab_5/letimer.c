@@ -56,18 +56,18 @@ void letimer0_init(void){
     letimer_init.bufTop   = false;
     letimer_init.comp0Top = true;
     letimer_init.debugRun = false;
-    letimer_init.enable   = false;                  // disabling during init
+    letimer_init.enable   = false;                  // Disabling during init
     letimer_init.out0Pol  = 0;
     letimer_init.out1Pol  = 0;
-    letimer_init.repMode  = letimerRepeatFree;      // setting repeat free mode
-    letimer_init.ufoa0    = letimerUFOANone;        // disabling underflow
-    letimer_init.ufoa1    = letimerUFOANone;        // disabling underflow
+    letimer_init.repMode  = letimerRepeatFree;      // Setting repeat free mode
+    letimer_init.ufoa0    = letimerUFOANone;        // Disabling underflow
+    letimer_init.ufoa1    = letimerUFOANone;        // Disabling underflow
 
     LETIMER_Init(LETIMER0, &letimer_init);          // Initialising
 
     /* Setting time compare values */
-    LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // setting comp0 register
-    LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // setting comp1 register
+    LETIMER_CompareSet(LETIMER0, 0, period_ticks);  // Setting comp0 register
+    LETIMER_CompareSet(LETIMER0, 1, on_ticks);      // Setting comp1 register
 
     /* Initialising interrupts on LETIMER COMP0 and COMP1 */
     LETIMER_Interrupt_Clear();
@@ -83,8 +83,8 @@ void LETIMER0_IRQHandler(void){
 
     /* Disabling other interrupts, grabbing flag source and clearing flags */
     CORE_ATOMIC_IRQ_DISABLE();
-    int_flag = LETIMER0_FLAG;
-    LETIMER0_FLAG_CLR = int_flag;
+    int_flag = LETIMER0_IF;
+    LETIMER0_IFC = int_flag;
 
     if (int_flag & LETIMER_IFC_COMP0) event |= COMP0_MASK;
     if (int_flag & LETIMER_IFC_COMP1) event |= COMP1_MASK;

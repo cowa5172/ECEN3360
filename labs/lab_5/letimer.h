@@ -20,16 +20,16 @@
 #define LED_ON_TIME     0.025
 #define LETIMER0_EM     3
 
-#define LETIMER0_FLAG     LETIMER0 -> IF
-#define LETIMER0_FLAG_CLR LETIMER0 -> IFC
-#define LETIMER0_INT_EN   LETIMER0 -> IEN
+#define LETIMER0_IF     LETIMER0 -> IF
+#define LETIMER0_IFC    LETIMER0 -> IFC
+#define LETIMER0_IEN    LETIMER0 -> IEN
 
-#define LETIMER_Interrupt_Clear()  (LETIMER0_FLAG_CLR = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1)
-#define LETIMER_Interrupt_Enable() (LETIMER0_INT_EN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1)
-#define LETIMER0_COMP0_Enable()    (LETIMER0_INT_EN |= LETIMER_IEN_COMP0)
-#define LETIMER0_COMP0_Disable()   (LETIMER0_INT_EN &= ~LETIMER_IEN_COMP0)
-#define LETIMER0_COMP1_Enable()    (LETIMER0_INT_EN |= LETIMER_IEN_COMP1)
-#define LETIMER0_COMP1_Disable()   (LETIMER0_INT_EN &= ~LETIMER_IEN_COMP1)
+#define LETIMER_Interrupt_Clear()  (LETIMER0_IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1)
+#define LETIMER_Interrupt_Enable() (LETIMER0_IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1)
+#define LETIMER0_COMP0_Enable()    (LETIMER0_IEN |= LETIMER_IEN_COMP0)
+#define LETIMER0_COMP0_Disable()   (LETIMER0_IEN &= ~LETIMER_IEN_COMP0)
+#define LETIMER0_COMP1_Enable()    (LETIMER0_IEN |= LETIMER_IEN_COMP1)
+#define LETIMER0_COMP1_Disable()   (LETIMER0_IEN &= ~LETIMER_IEN_COMP1)
 
 /******************************************************************************
  * FUNCTION DECLARATIONS                                                      *
