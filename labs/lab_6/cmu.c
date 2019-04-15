@@ -19,14 +19,13 @@
  *****************************************************************************/
 
 void cmu_init(void){
-    CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
-    CMU_ClockEnable(cmuClock_HFPER, true);
+//    CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
+//    CMU_ClockEnable(cmuClock_HFPER, true);
 
-    /* Enable the HFPERCLK for desired peripherals such as ADC */
-    CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFXO);
-    CMU_ClockEnable(cmuClock_HFPER, true);
-
-    CMU_HFXOAutostartEnable(true, true, true);
+	CMU_OscillatorEnable(cmuOsc_HFRCO, true, true);
+	CMU_ClockSelectSet(cmuClock_HFPER, cmuSelect_HFRCO);
+	CMU_ClockEnable(cmuClock_HFPER, true);
+	CMU_HFXOAutostartEnable(true, false, false);
 
     /* Enabling LFRCO to be default */
     CMU_OscillatorEnable(cmuOsc_LFRCO, false, false);	// using LFXO or ULFRCO
@@ -53,4 +52,5 @@ void cmu_init(void){
     CMU_ClockEnable(cmuClock_LETIMER0, true);
     CMU_ClockEnable(cmuClock_I2C0, true);
     CMU_ClockEnable(cmuClock_LEUART0, true);
+    CMU_ClockEnable(cmuClock_LDMA, true);
 }

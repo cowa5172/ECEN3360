@@ -4,10 +4,11 @@
 #include "bsp.h"
 #include "gpio.h"
 #include "cmu.h"
-#include "letimer.h"
 #include "emu.h"
-#include "i2c.h"
 #include "leuart.h"
+#include "ldma.h"
+#include "letimer.h"
+#include "i2c.h"
 #include "si7021.h"
 
 /******************************************************************************
@@ -26,7 +27,7 @@ volatile bool scale;
 bool reset_flag = false;
 
 int main(void){
-    EMU_Block(EM3);
+    EMU_Block(EM4);
     
     EMU_DCDCInit_TypeDef dcdcInit = EMU_DCDCINIT_DEFAULT;
     CMU_HFXOInit_TypeDef hfxoInit = CMU_HFXOINIT_DEFAULT;
@@ -60,6 +61,9 @@ int main(void){
 
     /* Initialise LEUART0 */
     leuart0_init();
+
+    /* Initialise LDMA */
+    ldma_init();
 
     /* Enable LETIMER0 */
     LETIMER_Enable(LETIMER0, true);
@@ -108,8 +112,8 @@ int main(void){
          * following a STARTF interrupt and before it is reenabled following a
          * SIGF interrupt.
          */
-        if (event & UART_RXDV_MASK){
-            event &= ~UART_RXDV_MASK;
+        if (event & RXDV_MASK){
+            event &= ~RXDV_MASK;
             LEUART0_Read();
 
             /* If full command has been received, disable RXDATAV interrupts.
@@ -150,7 +154,7 @@ int main(void){
 
         /*********************************************************************/
         /* 
-         * Schduler for the COMP1 event; invoked when the LETIMER reaches
+         * Scheduler for the COMP1 event; invoked when the LETIMER reaches
          * the COMP1 value, at which point the temperature is measured.
          */
         if (event & COMP1_MASK){
@@ -162,24 +166,22 @@ int main(void){
             LPM_Disable();
 
             /* Enable TX transmission once full ascii string created */
-            stop_TX = false;
-            LEUART0_TXBL_Enable();
+            LEUART0_TXDMAWU_Enable();
+            EMU_Block(EM3);
+            LDMA_Start_Transfer();
         }
 
         /*********************************************************************/
         /*
-         * Scheduler for the TXBL event; invoked when the temperature has been
+         * Scheduler for the TXC event; invoked when the temperature has been
          * converted into an array of ascii values and stopped once all those
          * values have been transmitted.
          */
-        if (event & TXBL_MASK){
-            event &= ~TXBL_MASK;
-            LEUART0_Write();
-
-            /* Disable TXBL if temperature is done transmitting, else reenable
-               for more transmissions. */
-            if (stop_TX) LEUART0_TXBL_Disable();
-            else LEUART0_TXBL_Enable();
+        if (event & TXC_MASK){
+        	event &= ~TXC_MASK;
+        	EMU_Unblock(EM3);
+            LEUART0_TXC_Disable();
+            LEUART0_TXDMAWU_Disable();
         }
     }
 }

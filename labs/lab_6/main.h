@@ -16,12 +16,12 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define COMP0_MASK      0b00000001
-#define COMP1_MASK      0b00000010
-#define TXBL_MASK       0b00000100
-#define UART_RXDV_MASK  0b00001000
-#define STARTF_MASK     0b00010000
-#define SIGF_MASK       0b00100000
+#define COMP0_MASK     0b00000001
+#define COMP1_MASK     0b00000010
+#define TXC_MASK       0b00000100
+#define RXDV_MASK      0b00001000
+#define STARTF_MASK    0b00010000
+#define SIGF_MASK      0b00100000
 
 #define CELSIUS         0
 #define FAHRENHEIT      1

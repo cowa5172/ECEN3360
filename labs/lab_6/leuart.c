@@ -15,9 +15,7 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
-volatile uint8_t write_count = 0;
 volatile uint8_t read_count = 0;
-volatile bool stop_TX = false;
 volatile bool stop_RX = false;
 
 /******************************************************************************
@@ -45,16 +43,9 @@ void leuart0_init(void){
 
     LEUART0_IEN |= (LEUART_IEN_STARTF | LEUART_IEN_SIGF);
 
-    NVIC_EnableIRQ(LEUART0_IRQn);
-}
+    LEUART0_CTRL |= LEUART_CTRL_TXDMAWU;
 
-void LEUART0_Write(void){
-    if (write_count < MAX_CHAR_W) LEUART_Tx(LEUART0, ascii_TX[write_count++]);
-    else {
-        stop_TX = true;
-        write_count = 0;
-        LEUART0_TXBL_Disable();
-    }
+    NVIC_EnableIRQ(LEUART0_IRQn);
 }
 
 void LEUART0_Read(void){
@@ -73,14 +64,12 @@ void LEUART0_IRQHandler(void){
     unsigned int int_flag = LEUART0_IF;
     LEUART0_IFC = int_flag;
 
-    if (int_flag & LEUART_IF_TXBL){
-        if (LEUART0_IEN & LEUART_IEN_TXBL){
-            event |= TXBL_MASK;
-            LEUART0_TXBL_Disable();
-        }
+    if (int_flag & LEUART_IF_TXC){
+    	event |= TXC_MASK;
+    	LEUART0_TXC_Disable();
     }
     if (int_flag & LEUART_IF_RXDATAV){
-        event |= UART_RXDV_MASK;
+        event |= RXDV_MASK;
         LEUART0_RXDATAV_Disable();
     }
     if (int_flag & LEUART_IF_STARTF) event |= STARTF_MASK;

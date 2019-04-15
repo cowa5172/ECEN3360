@@ -12,16 +12,13 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
-extern volatile uint8_t write_count;
 extern volatile uint8_t read_count;
 extern volatile bool stop_RX;
-extern volatile bool stop_TX;
 
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
 
-#define MAX_CHAR_W         (strlen(ascii_TX))
 #define MAX_CHAR_R         (strlen(ascii_RX))
 
 #define LEUART0_CMD        LEUART0 -> CMD
@@ -38,13 +35,10 @@ extern volatile bool stop_TX;
 #define LEUART0_SIGF       LEUART0 -> SIGFRAME
 
 /* LEUART0 Operation Aliases */
-#define LEUART0_Loopback_Enable() (LEUART0_CTRL |= LEUART_CTRL_LOOPBK)
-#define LEUART0_TX_Enable()       (LEUART0_CMD |= LEUART_CMD_TXEN)
-#define LEUART0_TX_Disable()      (LEUART0_CMD |= LEUART_CMD_TXDIS)
-#define LEUART0_RX_Enable()       (LEUART0_CMD |= LEUART_CMD_RXEN)
-#define LEUART0_RX_Disable()      (LEUART0_CMD |= LEUART_CMD_RXDIS)
-#define LEUART0_TXBL_Enable()     (LEUART0_IEN |= LEUART_IEN_TXBL)
-#define LEUART0_TXBL_Disable()    (LEUART0_IEN &= ~LEUART_IEN_TXBL)
+#define LEUART0_TXC_Enable()      (LEUART0_IEN |= LEUART_IEN_TXC)
+#define LEUART0_TXC_Disable()     (LEUART0_IEN &= ~LEUART_IEN_TXC)
+#define LEUART0_TXDMAWU_Enable()  (LEUART0_CTRL |= LEUART_CTRL_TXDMAWU)
+#define LEUART0_TXDMAWU_Disable() (LEUART0_CTRL &= ~LEUART_CTRL_TXDMAWU)
 #define LEUART0_RXDATAV_Enable()  (LEUART0_IEN |= LEUART_IEN_RXDATAV)
 #define LEUART0_RXDATAV_Disable() (LEUART0_IEN &= ~LEUART_IEN_RXDATAV)
 #define LEUART0_SFUBRX_Enable()   (LEUART0_CTRL |= LEUART_CTRL_SFUBRX)
@@ -66,22 +60,6 @@ extern volatile bool stop_TX;
  */
 
 void leuart0_init(void);
-
-/*****************************************************************************/
-
-/*
- * function name: LETIMER0_Write
- *
- * description: Function for sending a byte of data to a UART peripheral.
- *              Written expressly to send the temperature in ASCII format to
- *              the HL-10 bluetooth module.
- *
- * arguments: none
- *
- * returns: none
- */
-
-void LEUART0_Write(void);
 
 /*****************************************************************************/
 
