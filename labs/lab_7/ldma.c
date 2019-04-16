@@ -39,11 +39,11 @@ void ldma_init(void){
     ldma_xfer_RX = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_LEUART0_RXDATAV);
 }
 
-void LDMA_Start_Transfer_TX(void){
+void LDMA_Transfer_TX(void){
     LDMA_StartTransfer(TX_DMA_CHANNEL, &ldma_xfer_TX, &ldma_desc_TX);
 }
 
-void LDMA_Start_Transfer_RX(void){
+void LDMA_Transfer_RX(void){
 	LDMA_StartTransfer(RX_DMA_CHANNEL, &ldma_xfer_RX, &ldma_desc_RX);
 }
 

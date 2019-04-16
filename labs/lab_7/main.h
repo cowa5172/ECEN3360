@@ -13,16 +13,15 @@
  * authors: Dylan Oh and Mike Fruge                                           *
  *****************************************************************************/
 
+extern volatile uint8_t event;
+extern volatile bool scale;
+
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
-#define COMP1_MASK     0b00000001
-#define TXC_MASK       0b00000010
-#define STARTF_MASK    0b00000100
-#define SIGF_MASK      0b00001000
 
-#define CELSIUS         0
-#define FAHRENHEIT      1
-
-extern volatile uint8_t event;
-extern volatile bool scale;
+#define COMP1_MASK    0b001
+#define TXC_MASK      0b010
+#define SIGF_MASK     0b100
+#define CELSIUS       0
+#define FAHRENHEIT    1

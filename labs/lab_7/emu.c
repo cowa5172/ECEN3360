@@ -52,15 +52,9 @@ void EMU_Unblock(uint8_t EM){
 }
 
 void EMU_Sleep(void){
-    if (lowest_EM[EM0] > 0){
-        return;
-    } else if (lowest_EM[EM1] > 0){
-        return;
-    } else if (lowest_EM[EM2] > 0){
-        EMU_EnterEM1();
-    } else if (lowest_EM[EM3] > 0){
-        EMU_EnterEM2(true);
-    } else {
-        EMU_EnterEM3(true);
-    }
+    if (lowest_EM[EM0] > 0) return;
+    else if (lowest_EM[EM1] > 0) return;
+    else if (lowest_EM[EM2] > 0) EMU_EnterEM1();
+    else if (lowest_EM[EM3] > 0) EMU_EnterEM2(true);
+    else EMU_EnterEM3(true);
 }

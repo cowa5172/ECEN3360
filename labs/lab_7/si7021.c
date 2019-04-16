@@ -59,6 +59,7 @@ uint8_t SI7021_Read_User_Reg(void){
 }
 
 void SI7021_Measure_Temp(bool scale){
+    LPM_Enable();
     I2C0_Send_Abort();
     I2C0_CMD = I2C_CMD_CLEARPC;
 
@@ -73,13 +74,12 @@ void SI7021_Measure_Temp(bool scale){
     I2C0_Send_ACK();
     data = I2C0_Read();
     temp_code = temp_code | data;
-
-    /* Stop I2C */
     I2C0_Stop();
 
     /* Convert temperature to Celsius */
     float temp = convert_temp(temp_code);
     temp_to_ASCII(temp);
+    LPM_Disable();
 }
 
 float convert_temp(uint16_t data){
@@ -131,14 +131,12 @@ void temp_to_ASCII(float temp){
         temp_int = temp_int % place;
         if (ascii_TX[i - 1] == '.'){
             if (temp_int == 0) ascii_TX[i++] = '0';
-            else {
-                ascii_TX[i++] = (temp_int / (place / 10)) + 0x30;
-            }
+            else ascii_TX[i++] = (temp_int / (place / 10)) + 0x30;
             place = 0;
         } else place = place / 10;
     }
 
     /* Adding Celsius symbol */
-    if (scale == CELSIUS) ascii_TX[i++] = 'C';
+    if (scale == CELSIUS)    ascii_TX[i++] = 'C';
     if (scale == FAHRENHEIT) ascii_TX[i++] = 'F';
 }

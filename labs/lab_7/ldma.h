@@ -14,11 +14,11 @@
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
 
-#define XFER_COUNT  8
+#define XFER_COUNT     8
 #define RX_DMA_CHANNEL 0
 #define TX_DMA_CHANNEL 1
-#define TX_BUF_SIZE 7
-#define RX_BUF_SIZE 20
+#define TX_BUF_SIZE    7
+#define RX_BUF_SIZE    20
 
 #define LDMA_IF  (LDMA -> IF)
 #define LDMA_IFC (LDMA -> IFC)
@@ -45,7 +45,7 @@ void ldma_init(void);
 /*****************************************************************************/
 
 /*
- * function name: LDMA_Start_Transfer_TX
+ * function name: LDMA_Transfer_TX
  *
  * description: Begins the transfer from memory to the TX buffer
  *
@@ -54,7 +54,7 @@ void ldma_init(void);
  * returns: none
  */
 
-void LDMA_Start_Transfer_TX(void);
+void LDMA_Transfer_TX(void);
 
 /*****************************************************************************/
 
@@ -68,7 +68,7 @@ void LDMA_Start_Transfer_TX(void);
  * returns: none
  */
 
-void LDMA_Start_Transfer_RX(void);
+void LDMA_Transfer_RX(void);
 
 /*****************************************************************************/
 

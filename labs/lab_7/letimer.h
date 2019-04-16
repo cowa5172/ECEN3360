@@ -13,6 +13,7 @@
 /******************************************************************************
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
+
 #define LFXO_TICKS      32768u
 #define ULFRCO_TICKS    1000u
 #define MAX_COUNT       65536
@@ -20,10 +21,12 @@
 #define LED_ON_TIME     0.025
 #define LETIMER0_EM     3
 
+/* LETIMER Register Macros */
 #define LETIMER0_IF     LETIMER0 -> IF
 #define LETIMER0_IFC    LETIMER0 -> IFC
 #define LETIMER0_IEN    LETIMER0 -> IEN
 
+/* LETIMER Operation Aliases */
 #define LETIMER_Interrupt_Clear()  (LETIMER0_IFC = LETIMER_IFC_COMP0 | LETIMER_IFC_COMP1)
 #define LETIMER_Interrupt_Enable() (LETIMER0_IEN |= LETIMER_IEN_COMP0 | LETIMER_IEN_COMP1)
 #define LETIMER0_COMP0_Enable()    (LETIMER0_IEN |= LETIMER_IEN_COMP0)

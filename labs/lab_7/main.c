@@ -75,7 +75,7 @@ int main(void){
 
     while(LEUART0 -> SYNCBUSY);
 
-    LDMA_Start_Transfer_RX();
+    LDMA_Transfer_RX();
 
     /* Enables interrupts in the core */
     CORE_ATOMIC_IRQ_ENABLE();
@@ -97,15 +97,15 @@ int main(void){
             event &= ~COMP1_MASK;
 
             /* Measure temperature using the SI7021 */
-            LPM_Enable();
             SI7021_Measure_Temp(scale);
-            LPM_Disable();
 
-            /* Enable TX transmission once full ascii string created */
+            /* Reenabling DMA wakeup for TX (disabled in TXC) */
             LEUART0_TXDMAWU_Enable();
             while(LEUART0 -> SYNCBUSY);
+
+            /* Transfer data once TX array is ready */
             EMU_Block(EM3);
-            LDMA_Start_Transfer_TX();
+            LDMA_Transfer_TX();
         }
 
         /*********************************************************************/
@@ -116,14 +116,13 @@ int main(void){
         if (event & SIGF_MASK){
             event &= ~SIGF_MASK;
 
-            /* When sigframe has been received, RX transmission is stopped,
-               read_count is reset to 0 to allow for the next RX command, and
-               reset_flag is set false to indicate that no startframe has been
-               received. Temperature scale is decoded and RX is blocked. */
+            /* Enabling RXBLOCK, stops useless RX data from waking processor */
             LEUART0_RXBLOCK_Enable();
             while(LEUART0 -> SYNCBUSY);
+
+            /* Decoding command, resetting transfer to blank RX array */
             LEUART0_Decode();
-            LDMA_Start_Transfer_RX();
+            LDMA_Transfer_RX();
         }
 
         /*********************************************************************/
@@ -134,6 +133,8 @@ int main(void){
          */
         if (event & TXC_MASK){
         	event &= ~TXC_MASK;
+
+            /* Disabling TX DMA transfer */
         	EMU_Unblock(EM3);
             LEUART0_TXC_Disable();
             LEUART0_TXDMAWU_Disable();

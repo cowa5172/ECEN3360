@@ -79,11 +79,8 @@ void letimer0_init(void){
 }
 
 void LETIMER0_IRQHandler(void){
-    unsigned int int_flag;
-
-    /* Disabling other interrupts, grabbing flag source and clearing flags */
     CORE_ATOMIC_IRQ_DISABLE();
-    int_flag = LETIMER0_IF;
+    unsigned int int_flag = LETIMER0_IF;
     LETIMER0_IFC = int_flag;
 
     if (int_flag & LETIMER_IFC_COMP0) GPIO_PinOutSet(SENSOR_EN_PORT, SENSOR_EN_PIN);

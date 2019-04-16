@@ -38,6 +38,7 @@
 #define SENSOR_EN_PIN   10
 #define SENSOR_EN_DEF	false      // default state of sensor_enable (disabled)
 
+/* LEUART communication line properties */
 #define LEUART_TX_PORT  gpioPortD
 #define LEUART_TX_PIN   10
 #define LEUART_TX_DEF   true

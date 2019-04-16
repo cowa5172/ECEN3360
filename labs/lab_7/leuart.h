@@ -16,6 +16,7 @@
  * MACRO DEFINITIONS                                                          *
  *****************************************************************************/
 
+/* LEUART Register Macros */
 #define LEUART0_CMD        LEUART0 -> CMD
 #define LEUART0_CTRL       LEUART0 -> CTRL
 #define LEUART0_STAT       LUEART0 -> STATUS
