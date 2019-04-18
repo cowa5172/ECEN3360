@@ -46,34 +46,18 @@ int main(void){
     CMU_ClockSelectSet(cmuClock_HF, cmuSelect_HFXO);
     CMU_OscillatorEnable(cmuOsc_HFRCO, false, false);
 
-    /* Initialise clocks */
+    /* Initialise peripherals */
     cmu_init();
-
-    /* Initialise GPIO */
     gpio_init();
-
-    /* Initialise LETIMER0 */
     letimer0_init();
-
-    /* Initialise I2C0 */
     i2c0_init();
-
-    /* Initialise LEUART0 */
     leuart0_init();
-
-    /* Initialise LDMA */
     ldma_init();
 
-    /* Enable LETIMER0 */
+    /* Enable peripherals */
     LETIMER_Enable(LETIMER0, true);
-
-    /* Enable I2C0 */
     I2C_Enable(I2C0, true);
-
-    /* Enable LEUART0 */
     LEUART_Enable(LEUART0, leuartEnable);
-
-    while(LEUART0 -> SYNCBUSY);
 
     LDMA_Transfer_RX();
 
@@ -132,10 +116,10 @@ int main(void){
          * sleep at EM3, and disables TX DMA wakeup.
          */
         if (event & TXC_MASK){
-        	event &= ~TXC_MASK;
+            event &= ~TXC_MASK;
 
             /* Disabling TX DMA transfer */
-        	EMU_Unblock(EM3);
+            EMU_Unblock(EM3);
             LEUART0_TXC_Disable();
             LEUART0_TXDMAWU_Disable();
         }
