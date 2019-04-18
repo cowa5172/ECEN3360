@@ -30,17 +30,21 @@ void leuart0_init(void){
 
     LEUART_Init(LEUART0, &leuart_init);
 
+    /* Routing TX and RX pins for the LEUART */
     LEUART0_ROUTELOC = LEUART_ROUTELOC0_TXLOC_LOC18 | LEUART_ROUTELOC0_RXLOC_LOC18;
     LEUART0_ROUTEPEN = LEUART_ROUTEPEN_TXPEN | LEUART_ROUTEPEN_RXPEN;
 
+    /* Setting STARTF and SIGF characters */
     LEUART0_STARTF = '?';
     LEUART0_SIGF   = '#';
+    
+    /* Enabling necessary components for frame detection */
     LEUART0_RXBLOCK_Enable();
     LEUART0_SFUBRX_Enable();
     while(LEUART0 -> SYNCBUSY);
 
+    /* Enabling necessary components for LDMA */
     LEUART0_SIGF_Enable();
-
     LEUART0_TXDMAWU_Enable();
     LEUART0_RXDMAWU_Enable();
     while(LEUART0 -> SYNCBUSY);
@@ -64,7 +68,7 @@ void LEUART0_IRQHandler(void){
     	event |= TXC_MASK;
     	LEUART0_TXC_Disable();
     }
-    if (int_flag & LEUART_IF_SIGF)   event |= SIGF_MASK;
+    if (int_flag & LEUART_IF_SIGF) event |= SIGF_MASK;
 
     CORE_ATOMIC_IRQ_ENABLE();
 }
