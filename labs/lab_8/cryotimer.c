@@ -28,13 +28,13 @@ void cryotimer_setup(void){
 
 	CRYOTIMER_Init(&cryo_init);
 
-	CRYOTIMER -> IEN |= CRYOTIMER_IEN_PERIOD;
+	CRYOTIMER_Period_Enable();
 	NVIC_EnableIRQ(CRYOTIMER_IRQn);
 }
 
 void CRYOTIMER_IRQHandler(void){
 	CORE_ATOMIC_IRQ_DISABLE();
 	event |= CRYO_MASK;
-	CRYOTIMER -> IFC |= CRYOTIMER_IF_PERIOD;
+	CRYOTIMER_Period_Clear();
 	CORE_ATOMIC_IRQ_ENABLE();
 }
